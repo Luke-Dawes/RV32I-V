@@ -34,84 +34,77 @@ uint32_t fetch(uint32_t PC) {
 	return data;
 }
 
-inline uint8_t get_opcode(uint32_t CIR) {
-	return (uint8_t)CIR & 0x7F;
+struct Decoded {
+    uint8_t opcode;
+    uint8_t funct3;
+    uint8_t funct7;
+    uint8_t rd, rs1, rs2;
+    int32_t imm;
+};
+
+Decoded decode(uint32_t CIR) {
+    return Decoded{
+        .opcode = static_cast<uint8_t>(CIR & 0x7F),          // bits 0–6
+        .funct3 = static_cast<uint8_t>((CIR >> 12) & 0x7),   // bits 12–14
+        .funct7 = static_cast<uint8_t>((CIR >> 25) & 0x7F),  // bits 25–31
+        .rd = static_cast<uint8_t>((CIR >> 7) & 0x1F),   // bits 7–11
+        .rs1 = static_cast<uint8_t>((CIR >> 15) & 0x1F),  // bits 15–19
+        .rs2 = static_cast<uint8_t>((CIR >> 20) & 0x1F),   // bits 20–24
+        .imm = 0 //used for I/S/B/U/J types later
+    };
 }
 
-uint8_t get_funct3(uint32_t CIR) {
-    //14-12 bits
-    uint8_t temp =
-        (CIR >> 12) & 0x7; 
 
-}
+void run_instructions(uint32_t CIR) {
+    Decoded current = decode(CIR);
 
-void decode_instruction(uint32_t CIR) {
-    // Extract the major opcode (bits 0-6)
-    uint8_t opcode = CIR & 0x7F;
-    //extract the funct3 which is in the 12-14 bits
-    uint8_t funct3 = (CIR >> 12) & 0x7;
-
-    switch (opcode) {
+    switch (current.opcode) {
 
         case 0x33: //R-type
 
-            uint32_t rd = (CIR >> 7) & 0x1F;
-            uint32_t rs1 = (CIR >> 15) & 0x1F;
-            uint32_t rs2 = (CIR >> 20) & 0x1F;
-            uint32_t funct7 = (CIR >> 25) & 0x7F;
-
-            switch (funct3) {
+            switch (current.funct3) {
 
                 case 0x0:
                     //add or sub
-                    if (funct7 == 0x00) {
-                        add(rd, rs1, rs2);
-                    }
-                    else {
-                        sub(rd, rs1, rs2);
-                    }
+                    (current.funct7 == 0x20) ? sub(current.rd, current.rs1, current.rs2) : add(current.rd, current.rs1,current.rs2);
 
                     break;
                 case 0x1:
-                    sll(rd, rs1, rs2);
+                    sll(current.rd, current.rs1, current.rs2);
                     //logical left shift 
                     break;
 
                 case 0x2:
-                    slt(rd, rs1, rs2);
+                    slt(current.rd, current.rs1, current.rs2);
                     //set less than
                     break;
 
                 case 0x3:
-                    sltu(rd, rs1, rs2);
+                    sltu(current.rd, current.rs1, current.rs2);
                     //set less than (u)
                     break;
 
                 case 0x4:
-                    _xor(rd, rs1, rs2);
+                    _xor(current.rd, current.rs1, current.rs2);
                     //xor
                     break;
 
                 case 0x5:
                     //shift right logical
                     //shift right arith
-                    if (funct7 == 0x00) {
-                        srl(rd, rs1, rs2);
-                    }
-                    else {
-                        sra(rd, rs1, rs2);
-                    }
+
+                    (current.funct7 == 0x20) ? srl(current.rd, current.rs1, current.rs2) : sra(current.rd, current.rs1, current.rs2);
                     
                     break;
 
                 case 0x6:
                     //or
-                    _or(rd, rs1, rs2);
+                    _or(current.rd, current.rs1, current.rs2);
                     break;
 
                 case 0x7:
                     //and
-                    _and(rd, rs1, rs2);
+                    _and(current.rd, current.rs1, current.rs2);
                     break;
 
                 default:
