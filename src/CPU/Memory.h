@@ -1,11 +1,14 @@
 #pragma once
 #include <cstdint>
 
-//little edian memory 
+using std::uint32_t;
 
+//little edian memory 
 uint8_t RAM[0x100];
 uint32_t registers[31];
 int32_t PC = 0;
+
+
 
 constexpr auto out_of_bounds = 0x1;
 constexpr auto miss_aligned_trap = 0x2;
