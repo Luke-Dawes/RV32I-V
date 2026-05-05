@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "../Instructions/R-type/Instructions.h"
 
 using std::uint32_t;
 
@@ -51,37 +52,70 @@ void decode_instruction(uint32_t CIR) {
     uint8_t funct3 = (CIR >> 12) & 0x7;
 
     switch (opcode) {
-        case 0x33:
+
+        case 0x33: //R-type
+
+            uint32_t rd = (CIR >> 7) & 0x1F;
+            uint32_t rs1 = (CIR >> 15) & 0x1F;
+            uint32_t rs2 = (CIR >> 20) & 0x1F;
+            uint32_t funct7 = (CIR >> 25) & 0x7F;
 
             switch (funct3) {
 
                 case 0x0:
-                    //need funct7 to tell - either add or sub
+                    //add or sub
+                    if (funct7 == 0x00) {
+                        add(rd, rs1, rs2);
+                    }
+                    else {
+                        sub(rd, rs1, rs2);
+                    }
+
                     break;
                 case 0x1:
+                    sll(rd, rs1, rs2);
                     //logical left shift 
                     break;
+
                 case 0x2:
+                    slt(rd, rs1, rs2);
                     //set less than
                     break;
+
                 case 0x3:
+                    sltu(rd, rs1, rs2);
                     //set less than (u)
                     break;
+
                 case 0x4:
+                    _xor(rd, rs1, rs2);
                     //xor
                     break;
+
                 case 0x5:
                     //shift right logical
                     //shift right arith
+                    if (funct7 == 0x00) {
+                        srl(rd, rs1, rs2);
+                    }
+                    else {
+                        sra(rd, rs1, rs2);
+                    }
+                    
                     break;
+
                 case 0x6:
                     //or
+                    _or(rd, rs1, rs2);
                     break;
+
                 case 0x7:
                     //and
+                    _and(rd, rs1, rs2);
                     break;
+
                 default:
-                    //unknown
+                    //broken
                     break;
             }
 
