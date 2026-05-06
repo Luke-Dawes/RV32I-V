@@ -124,11 +124,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Instructions\I-type\Instructions.cpp" />
     <ClCompile Include="src\Instructions\Instructions.cpp" />
     <ClCompile Include="src\Instructions\R-type\Instructions.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Instructions\I-type\Instructions.h" />
     <ClInclude Include="src\Instructions\Instructions.h" />
     <ClInclude Include="src\CPU\Memory.h" />
     <ClInclude Include="src\Instructions\R-type\Instructions.h" />

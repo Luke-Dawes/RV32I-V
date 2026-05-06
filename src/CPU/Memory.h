@@ -9,8 +9,6 @@ uint8_t RAM[0x100];
 uint32_t registers[31];
 int32_t PC = 0;
 
-
-
 constexpr auto out_of_bounds = 0x1;
 constexpr auto miss_aligned_trap = 0x2;
 
@@ -50,7 +48,7 @@ Decoded decode(uint32_t CIR) {
         .rd = static_cast<uint8_t>((CIR >> 7) & 0x1F),   // bits 7–11
         .rs1 = static_cast<uint8_t>((CIR >> 15) & 0x1F),  // bits 15–19
         .rs2 = static_cast<uint8_t>((CIR >> 20) & 0x1F),   // bits 20–24
-        .imm = 0 //used for I/S/B/U/J types later
+        .imm = static_cast<uint16_t>((CIR >> 20) & 0xFFF) //as ram is only 8 bits 
     };
 }
 
@@ -114,6 +112,10 @@ void run_instructions(uint32_t CIR) {
 
             break;
         
+        case 0x13: //I-type
+
+            break;
+
         default:
             break;
 
