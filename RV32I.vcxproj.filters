@@ -21,10 +21,13 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Instructions\R-type\Instructions.cpp">
+    <ClCompile Include="src\Instructions\R-type\R-Instructions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Instructions\I-type\Instructions.cpp">
+    <ClCompile Include="src\Instructions\I-type\I-Instructions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Instructions\S-type\S-Instructions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,10 +38,13 @@
     <ClInclude Include="src\CPU\Memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Instructions\R-type\Instructions.h">
+    <ClInclude Include="src\Instructions\R-type\R-Instructions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Instructions\I-type\Instructions.h">
+    <ClInclude Include="src\Instructions\I-type\I-Instructions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Instructions\S-type\S-Instructions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
