@@ -1,6 +1,5 @@
 #include "R-Instructions.h"
 #include "../../CPU/Memory.h"
-#include "../../CPU/Memory.h" //only way intellisense will work is include it twice
 
 void add(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm) {
 	if (rd != 0) registers[rd] = registers[rs1] + registers[rs2];

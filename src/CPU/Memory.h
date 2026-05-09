@@ -99,90 +99,27 @@ void init_table() {
     Instructions[IDX(0, 7, 0x33)] = _and;
 
     // --- BRANCH (Opcode 0x63) ---
-    Instructions[IDX(0, 0, 0x63)] = beq;
-    Instructions[IDX(0, 1, 0x63)] = bne;
-    Instructions[IDX(0, 4, 0x63)] = blt;
-    Instructions[IDX(0, 5, 0x63)] = bge;
-    Instructions[IDX(0, 6, 0x63)] = bltu;
-    Instructions[IDX(0, 7, 0x63)] = bgeu;
+    //Instructions[IDX(0, 0, 0x63)] = beq;
+    //Instructions[IDX(0, 1, 0x63)] = bne;
+    //Instructions[IDX(0, 4, 0x63)] = blt;
+    //Instructions[IDX(0, 5, 0x63)] = bge;
+    //Instructions[IDX(0, 6, 0x63)] = bltu;
+    //Instructions[IDX(0, 7, 0x63)] = bgeu;
 
     // --- JUMP & UPPER IMM (Various Opcodes) ---
-    Instructions[IDX(0, 0, 0x6F)] = jal;   // Opcode 0x6F
-    Instructions[IDX(0, 0, 0x67)] = jalr;  // Opcode 0x67 (funct3=0)
-    Instructions[IDX(0, 0, 0x37)] = lui;   // Opcode 0x37
-    Instructions[IDX(0, 0, 0x17)] = auipc; // Opcode 0x17
+    //Instructions[IDX(0, 0, 0x6F)] = jal;   // Opcode 0x6F
+    //Instructions[IDX(0, 0, 0x67)] = jalr;  // Opcode 0x67 (funct3=0)
+    //Instructions[IDX(0, 0, 0x37)] = lui;   // Opcode 0x37
+    //Instructions[IDX(0, 0, 0x17)] = auipc; // Opcode 0x17
 
     // --- SYSTEM (Opcode 0x73) ---
-    Instructions[IDX(0, 0, 0x73)] = system_call; // Handles ECALL/EBREAK
+    //Instructions[IDX(0, 0, 0x73)] = system_call; // Handles ECALL/EBREAK
 }
 
 
 
 void run_instructions(uint32_t CIR) {
     Decoded current = decode(CIR);
-
-    switch (current.opcode) {
-
-        case 0x33: //R-type
-
-            switch (current.funct3) {
-
-                case 0x0:
-                    //add or sub
-                    (current.funct7 == 0x20) ? sub(current.rd, current.rs1, current.rs2) : add(current.rd, current.rs1,current.rs2);
-
-                    break;
-                case 0x1:
-                    sll(current.rd, current.rs1, current.rs2);
-                    //logical left shift 
-                    break;
-
-                case 0x2:
-                    slt(current.rd, current.rs1, current.rs2);
-                    //set less than
-                    break;
-
-                case 0x3:
-                    sltu(current.rd, current.rs1, current.rs2);
-                    //set less than (u)
-                    break;
-
-                case 0x4:
-                    _xor(current.rd, current.rs1, current.rs2);
-                    //xor
-                    break;
-
-                case 0x5:
-                    //shift right logical
-                    //shift right arith
-
-                    (current.funct7 == 0x20) ? srl(current.rd, current.rs1, current.rs2) : sra(current.rd, current.rs1, current.rs2);
-                    
-                    break;
-
-                case 0x6:
-                    //or
-                    _or(current.rd, current.rs1, current.rs2);
-                    break;
-
-                case 0x7:
-                    //and
-                    _and(current.rd, current.rs1, current.rs2);
-                    break;
-
-                default:
-                    //broken
-                    break;
-            }
-
-            break;
-        
-        case 0x13: //I-type
-
-            break;
-
-        default:
-            break;
 
 }
 
