@@ -14,10 +14,16 @@ void run_tests() {
 
 void test_sb() 
 {
+	registers[5] = 5; // Base address
+	registers[6] = 6; // Value to store
+	RAM[10] = 0;      // Clear target memory
+	
+
 	sb(5, 5, 6, 0);
 	//should store it at the 10th ram address
 	
 	assert(RAM[10] == 6 && "loading 6 into ram addess 10 on test_sb failed");
+
 }
 
 void test_sh();

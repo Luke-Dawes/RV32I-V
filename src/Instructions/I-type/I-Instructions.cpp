@@ -56,7 +56,7 @@ void lh(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm) {
 	}
 }
 //signed
-void l(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm) {
+void lw(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm) {
 	if (rd != 0) {
 		registers[rd] = static_cast<int32_t>(
 			RAM[rs1 + imm] |
