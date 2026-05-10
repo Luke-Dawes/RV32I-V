@@ -96,3 +96,11 @@ void init_table() {
     //Instructions[IDX(0, 0, 0x73)] = system_call; // Handles ECALL/EBREAK
 }
 
+void init_memory() {
+    for (auto i : RAM) {
+        i = 0;
+    }
+    for (auto i : registers) {
+        i = 0;
+    }
+}

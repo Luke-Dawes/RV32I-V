@@ -16,6 +16,7 @@ constexpr auto miss_aligned_trap = 0x2;
 
 uint32_t fetch(uint32_t PC);
 
+void init_memory();
 
 struct Decoded {
     uint8_t opcode;
@@ -29,6 +30,8 @@ struct Decoded {
 Decoded decode(uint32_t CIR);
 
 
+// ================ bug ===============================
+// rd, rs1, rs2 are all uint8_t. I need to change every function to match this and this typedef
 typedef void (*InstructionFunc)(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
 
 
