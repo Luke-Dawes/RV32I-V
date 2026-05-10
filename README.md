@@ -12,7 +12,7 @@ https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.
 
 
 
-#long term aim
+# long term aim
 
 build this, with the base 40 instructions 
 
