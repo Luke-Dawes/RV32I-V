@@ -3,7 +3,8 @@
 
 
 int main() {
-	init_memory();
-	run_tests();
+	CPU cpu;
+	init_RAM();
+	run_tests(cpu);
 	return 1;
 }

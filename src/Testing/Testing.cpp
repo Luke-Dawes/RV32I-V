@@ -3,37 +3,44 @@
 #include "../Instructions/S-type/S-Instructions.h"
 #include <cassert>
 #include "../CPU/Memory.h"
+#include "../CPU/CPU.h"
 
 //------------- Main testing function -------------------
 
-void run_tests() {
+void run_tests(CPU& cpu) {
 
 	// s types
-	test_sb();
+	test_sb(cpu);
 
 	//r types
-	test_add();
-	test_sub();
+	test_add(cpu);
+	test_sub(cpu);
 
 }
 
 // ------------- S-type ----------------------------------
 
-void test_sb() 
+void test_sb(CPU& cpu)
 {
-	registers[5] = 5; // Base address
-	registers[6] = 6; // Value to store
+	cpu.registers[5] = 5; // Base address
+	cpu.registers[6] = 6; // Value to store
+
+	Decoded_instruction d;
+
+	d.rs1 = 5; //this
+	d.imm = 5; //plus this for the location
+	d.rs2 = 6; //value to be stored
 	
 
-	sb(5, 5, 6, 0);
+	sb(cpu, d);
 	//should store it at the 10th ram address
 	
 	assert(RAM[10] == 6 && "loading 6 into ram addess 10 on test_sb failed");
 
 }
 
-void test_sh();
-void test_sw();
+void test_sh(CPU& cpu);
+void test_sw(CPU& cpu);
 
 
 
@@ -43,47 +50,61 @@ void test_sw();
 
 
 //need loading first
-void test_add() 
+void test_add(CPU& cpu)
 {
-	registers[5] = 2;
-	registers[6] = 4;
-	add(0, 5, 6, 0); //add whatever is in register 5 and 6 to 0
+	cpu.registers[5] = 2;
+	cpu.registers[6] = 4;
+
+	Decoded_instruction d;
+	d.rs1 = 5;
+	d.rs2 = 6;
+	d.rd = 0;
+
+	add(cpu, d); //add whatever is in register 5 and 6 to 0
 	
-	assert(registers[0] == 0 && "register 0 had its value changes in test_add");
+	assert(cpu.registers[0] == 0 && "register 0 had its value changes in test_add");
 
+	d.rd = 1;
 
-	add(1, 5, 6, 0);
+	add(cpu, d);
 
-	assert(registers[1] == 6 && "addition broke in test_add");
+	assert(cpu.registers[1] == 6 && "addition broke in test_add");
 
 }
-void test_sub() 
+void test_sub(CPU& cpu)
 {
-	registers[5] = 2;
-	registers[6] = 4;
-	sub(0, 5, 6, 0); 
+	cpu.registers[5] = 2;
+	cpu.registers[6] = 4;
 
-	assert(registers[0] == 0 && "register 0 had its value changes in test_sub");
+	Decoded_instruction d;
+	d.rs1 = 6;
+	d.rs2 = 5;
+	d.rd = 0;
 
-	sub(1, 6, 5, 0);
+	sub(cpu, d); 
 
-	assert(registers[1] == 2 && "subtraction broke in test_sub");
+	assert(cpu.registers[0] == 0 && "register 0 had its value changes in test_sub");
 
-	sub(2, 5, 6, 0);
+	d.rd = 1;
 
-	assert(registers[2] == static_cast<uint32_t>(-2) && "underflow broke in test_sub");
+	sub(cpu, d);
+
+	assert(cpu.registers[1] == 2 && "subtraction broke in test_sub");
+
+	d.rd = 2;
+	d.rs1 = 5;
+	d.rs2 = 6;
+
+	sub(cpu, d);
+
+	assert(cpu.registers[2] == static_cast<uint32_t>(-2) && "underflow broke in test_sub");
 
 }
-void test__xor()
-{
-	//
-	registers[5] 
-	registers[6]
-}
-void test__or();
-void test__and();
-void test_sll();
-void test_srl();
-void test_sra();
-void test_slt();
-void test_sltu();
+void test__xor(CPU& cpu);
+void test__or(CPU& cpu);
+void test__and(CPU& cpu);
+void test_sll(CPU& cpu);
+void test_srl(CPU& cpu);
+void test_sra(CPU& cpu);
+void test_slt(CPU& cpu);
+void test_sltu(CPU& cpu);

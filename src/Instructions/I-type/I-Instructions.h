@@ -1,20 +1,21 @@
 #pragma once
 #include <cstdint>
+#include "../../CPU/Memory.h"
 
 
-void addi(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void xori(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void ori(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void andi(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void slli(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void srli(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void srai(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void slti(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void sltiu(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
+void addi(CPU& cpu, Decoded_instruction& ins);
+void xori(CPU& cpu, Decoded_instruction& ins);
+void ori(CPU& cpu, Decoded_instruction& ins);
+void andi(CPU& cpu, Decoded_instruction& ins);
+void slli(CPU& cpu, Decoded_instruction& ins);
+void srli(CPU& cpu, Decoded_instruction& ins);
+void srai(CPU& cpu, Decoded_instruction& ins);
+void slti(CPU& cpu, Decoded_instruction& ins);
+void sltiu(CPU& cpu, Decoded_instruction& ins);
 
 
-void lb(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void lh(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void lw(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void lbu(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void lhu(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
+void lb(CPU& cpu, Decoded_instruction& ins);
+void lh(CPU& cpu, Decoded_instruction& ins);
+void lw(CPU& cpu, Decoded_instruction& ins);
+void lbu(CPU& cpu, Decoded_instruction& ins);
+void lhu(CPU& cpu, Decoded_instruction& ins);

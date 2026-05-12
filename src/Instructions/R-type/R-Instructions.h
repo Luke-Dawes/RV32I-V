@@ -1,13 +1,14 @@
 #pragma once
 #include <cstdint>
+#include "../../CPU/Memory.h"
 
-void add(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void sub(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void _xor(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void _or(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void _and(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void sll(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void srl(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void sra(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void slt(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
-void sltu(uint32_t rd, uint32_t rs1, uint32_t rs2, uint16_t imm);
+void add(CPU& cpu, Decoded_instruction& ins);
+void sub(CPU& cpu, Decoded_instruction& ins);
+void _xor(CPU& cpu, Decoded_instruction& ins);
+void _or(CPU& cpu, Decoded_instruction& ins);
+void _and(CPU& cpu, Decoded_instruction& ins);
+void sll(CPU& cpu, Decoded_instruction& ins);
+void srl(CPU& cpu, Decoded_instruction& ins);
+void sra(CPU& cpu, Decoded_instruction& ins);
+void slt(CPU& cpu, Decoded_instruction& ins);
+void sltu(CPU& cpu, Decoded_instruction& ins);

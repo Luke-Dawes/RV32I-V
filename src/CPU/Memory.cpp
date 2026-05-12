@@ -1,11 +1,118 @@
 #include "Memory.h"
+#include "../Instructions/R-type/R-Instructions.h"
+#include "../Instructions/I-type/I-Instructions.h"
+#include "../Instructions/S-type/S-Instructions.h"
 
 uint8_t RAM[0x100];
-uint32_t registers[31];
-int32_t PC = 0;
 
 //constexpr auto out_of_bounds = 0x1;
 //constexpr auto miss_aligned_trap = 0x2;
+
+Decoded_instruction decode(uint32_t PC) {
+    Decoded_instruction d;
+
+    
+    d.opcode = PC & 0x7F;
+    d.rd = (PC >> 7) & 0x1F;
+    d.funct3 = (PC >> 12) & 0x7;
+    d.rs1 = (PC >> 15) & 0x1F;
+    d.rs2 = (PC >> 20) & 0x1F;
+    d.funct7 = (PC >> 25) & 0x7F;
+
+    switch (d.opcode)
+    {
+        // ---------------- R-type ----------------
+    case 0x33:
+        d.type = Instruction_type::R;
+        d.imm = 0;
+        break;
+
+        // ---------------- I-type ----------------
+    case 0x03: // loads
+    case 0x13: // immediate ALU
+    case 0x67: // JALR
+    {
+        d.type = Instruction_type::I;
+
+        d.imm = (int32_t)PC >> 20; // sign-extend 12-bit
+        break;
+    }
+
+    // ---------------- S-type (store) ----------------
+    case 0x23:
+    {
+        d.type = Instruction_type::S;
+
+        int32_t imm =
+            ((PC >> 7) & 0x1F) |
+            ((PC >> 25) & 0x7F) << 5;
+
+        // sign-extend 12-bit
+        if (imm & 0x800)
+            imm |= 0xFFFFF000;
+
+        d.imm = imm;
+        break;
+    }
+
+    // ---------------- B-type (branch) ----------------
+    case 0x63:
+    {
+        d.type = Instruction_type::B;
+
+        int32_t imm =
+            ((PC >> 8) & 0x0F) << 1 |  // bits 4:1
+            ((PC >> 25) & 0x3F) << 5 |  // bits 10:5
+            ((PC >> 7) & 0x01) << 11 |  // bit 11
+            ((PC >> 31) & 0x01) << 12;   // bit 12 (sign)
+
+        // sign-extend 13-bit
+        if (imm & 0x1000)
+            imm |= 0xFFFFE000;
+
+        d.imm = imm;
+        break;
+    }
+
+    // ---------------- U-type ----------------
+    case 0x37: // LUI
+    case 0x17: // AUIPC
+    {
+        d.type = Instruction_type::U;
+        d.imm = (int32_t)(PC & 0xFFFFF000);
+        break;
+    }
+
+    // ---------------- J-type ----------------
+    case 0x6F:
+    {
+        d.type = Instruction_type::J;
+
+        int32_t imm =
+            ((PC >> 21) & 0x3FF) << 1 |  // bits 10:1
+            ((PC >> 20) & 0x1) << 11 |  // bit 11
+            ((PC >> 12) & 0xFF) << 12 |  // bits 19:12
+            ((PC >> 31) & 0x1) << 20;   // sign bit
+
+        // sign-extend 21-bit
+        if (imm & 0x100000)
+            imm |= 0xFFE00000;
+
+        d.imm = imm;
+        break;
+    }
+
+    default:
+        d.type = Instruction_type::R;
+        d.imm = 0;
+        break;
+    }
+
+    return d;
+}
+
+
+
 
 uint32_t fetch(uint32_t PC) {
 	if (PC + 3 >= 0x100) {
@@ -26,18 +133,8 @@ uint32_t fetch(uint32_t PC) {
 	return data;
 }
 
-Decoded decode(uint32_t CIR) {
-	return Decoded{
-		.opcode = static_cast<uint8_t>(CIR & 0x7F),          // bits 0–6
-		.funct3 = static_cast<uint8_t>((CIR >> 12) & 0x7),   // bits 12–14
-		.funct7 = static_cast<uint8_t>((CIR >> 25) & 0x7F),  // bits 25–31
-		.rd = static_cast<uint8_t>((CIR >> 7) & 0x1F),   // bits 7–11
-		.rs1 = static_cast<uint8_t>((CIR >> 15) & 0x1F),  // bits 15–19
-		.rs2 = static_cast<uint8_t>((CIR >> 20) & 0x1F),   // bits 20–24
-		.imm = static_cast<uint16_t>((CIR >> 20) & 0xFFF),
-		.index = (((CIR >> 30) & 0x1) << 10) | (((CIR >> 12) & 0x7) << 7) | (CIR & 0x7F)
-	};
-}
+
+
 
 #define IDX(b30, f3, op) (((b30) << 10) | ((f3) << 7) | (op))
 
@@ -96,11 +193,8 @@ void init_table() {
     //Instructions[IDX(0, 0, 0x73)] = system_call; // Handles ECALL/EBREAK
 }
 
-void init_memory() {
+void init_RAM() { //needs to move
     for (auto i : RAM) {
-        i = 0;
-    }
-    for (auto i : registers) {
         i = 0;
     }
 }
