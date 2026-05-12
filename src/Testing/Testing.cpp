@@ -20,6 +20,8 @@ void run_tests(CPU& cpu) {
 	test__xor(cpu);
 	test__and(cpu);
 	test__or(cpu);
+	test_sll(cpu);
+	test_srl(cpu);
 
 }
 
@@ -175,8 +177,34 @@ void test__and(CPU& cpu) {
 	assert(cpu.registers[1] == 1 && "and broke in test_and");
 }
 
-void test_sll(CPU& cpu);
-void test_srl(CPU& cpu);
+void test_sll(CPU& cpu) {
+	cpu.registers[5] = 5; //101
+	cpu.registers[6] = 1; //001
+
+	Decoded_instruction d;
+	d.rs1 = 5;
+	d.rs2 = 6;
+	d.rd = 1;
+
+	sll(cpu, d);
+
+	assert(cpu.registers[1] == 10 && "shifting right stopped working in test_sll");
+}
+
+void test_srl(CPU& cpu) {
+	cpu.registers[5] = 5; //101
+	cpu.registers[6] = 1; //001
+
+	Decoded_instruction d;
+	d.rs1 = 5;
+	d.rs2 = 6;
+	d.rd = 1;
+
+	srl(cpu, d);
+
+	assert(cpu.registers[1] == 2 && "shifting left stopped working in test_srl");
+}
+
 void test_sra(CPU& cpu);
 void test_slt(CPU& cpu);
 void test_sltu(CPU& cpu);
