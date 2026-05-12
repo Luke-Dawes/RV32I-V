@@ -12,11 +12,11 @@ https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.
 
 
 
-#long term aim
+# long term aim
 
 build this, with the base 40 instructions 
 
-build a like interpreter which translatws python or c++ to these instructions.
+build a like interpreter which translates python or c++ or some sort of psuedocode to these instructions.
 
 add pipelining with threading 
 
