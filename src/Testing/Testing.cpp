@@ -11,6 +11,8 @@ void run_tests(CPU& cpu) {
 
 	// s types
 	test_sb(cpu);
+	test_sh(cpu);
+	test_sw(cpu);
 
 	//r types
 	test_add(cpu);
@@ -35,24 +37,51 @@ void test_sb(CPU& cpu)
 	d.rs2 = 6; //value to be stored
 	
 
-	sb(cpu, d);
+	sb(cpu, d); //register[rs1] + imm for the location, register[rs2] for data
 	//should store it at the 10th ram address
 	
 	assert(RAM[10] == 6 && "loading 6 into ram addess 10 on test_sb failed");
 
 }
 
-void test_sh(CPU& cpu);
-void test_sw(CPU& cpu);
+void test_sh(CPU& cpu) {
+	cpu.registers[5] = 10;
+	cpu.registers[6] = 0x1122;
 
+	Decoded_instruction d;
+	d.rs1 = 5;
+	d.imm = 10;
+	d.rs2 = 6;
 
+	sh(cpu, d); //register[rs1] + imm for the location, register[rs2] for data
 
+	uint32_t addr = 20;
 
+	assert(RAM[addr] == 0x22 && "test_sh failed first byte");
+	assert(RAM[addr + 1] == 0x11 && "test_sh failed second byte");
+}
 
+void test_sw(CPU& cpu) {
+	cpu.registers[5] = 10;
+	cpu.registers[6] = 0x11223344;
 
+	Decoded_instruction d;
+	d.rs1 = 5;
+	d.imm = 10;
+	d.rs2 = 6;
 
+	sw(cpu, d); //register[rs1] + imm for the location, register[rs2] for data
 
-//need loading first
+	uint32_t addr = 20;
+
+	assert(RAM[addr] == 0x44 && "test_sh failed first byte");
+	assert(RAM[addr + 1] == 0x33 && "test_sh failed second byte");
+	assert(RAM[addr + 2] == 0x22 && "test_sh failed third byte");
+	assert(RAM[addr + 3] == 0x11 && "test_sh failed fourth byte");
+}
+
+// ------------- R-type ----------------------------------
+
 void test_add(CPU& cpu)
 {
 	cpu.registers[5] = 2;
