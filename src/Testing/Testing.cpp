@@ -16,6 +16,8 @@ void run_tests(CPU& cpu) {
 	test_add(cpu);
 	test_sub(cpu);
 	test__xor(cpu);
+	test__and(cpu);
+	test__or(cpu);
 
 }
 
