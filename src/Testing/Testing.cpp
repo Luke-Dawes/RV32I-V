@@ -15,6 +15,7 @@ void run_tests(CPU& cpu) {
 	//r types
 	test_add(cpu);
 	test_sub(cpu);
+	test__xor(cpu);
 
 }
 
@@ -100,9 +101,49 @@ void test_sub(CPU& cpu)
 	assert(cpu.registers[2] == static_cast<uint32_t>(-2) && "underflow broke in test_sub");
 
 }
-void test__xor(CPU& cpu);
-void test__or(CPU& cpu);
-void test__and(CPU& cpu);
+
+void test__xor(CPU& cpu) {
+	cpu.registers[5] = 5; //101
+	cpu.registers[6] = 1; //001
+
+	Decoded_instruction d;
+	d.rs1 = 5;
+	d.rs2 = 6;
+	d.rd = 1;
+
+	_xor(cpu, d);
+
+	assert(cpu.registers[1] == 4 && "xor broke in test_xor");
+}
+
+void test__or(CPU& cpu) {
+	cpu.registers[5] = 5; //101
+	cpu.registers[6] = 1; //001
+
+	Decoded_instruction d;
+	d.rs1 = 5;
+	d.rs2 = 6;
+	d.rd = 1;
+
+	_or(cpu, d);
+
+	assert(cpu.registers[1] == 5 && "or broke in test_or");
+}
+
+void test__and(CPU& cpu) {
+	cpu.registers[5] = 5; //101
+	cpu.registers[6] = 1; //001
+
+	Decoded_instruction d;
+	d.rs1 = 5;
+	d.rs2 = 6;
+	d.rd = 1;
+
+	_and(cpu, d);
+
+	assert(cpu.registers[1] == 1 && "and broke in test_and");
+}
+
 void test_sll(CPU& cpu);
 void test_srl(CPU& cpu);
 void test_sra(CPU& cpu);
