@@ -1,6 +1,9 @@
 #pragma once
 #include <cstdint>
-#include "../../CPU/Memory.h"
+
+class CPU;
+struct Decoded_instruction;
+
 
 
 void addi(CPU& cpu, Decoded_instruction& ins);
@@ -19,3 +22,7 @@ void lh(CPU& cpu, Decoded_instruction& ins);
 void lw(CPU& cpu, Decoded_instruction& ins);
 void lbu(CPU& cpu, Decoded_instruction& ins);
 void lhu(CPU& cpu, Decoded_instruction& ins);
+
+void jalr(CPU& cpu, Decoded_instruction& ins);
+void ecall(CPU& cpu, Decoded_instruction& ins) {}
+void ebreak(CPU& cpu, Decoded_instruction& ins) {}

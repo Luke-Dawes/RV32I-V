@@ -1,4 +1,6 @@
 #include "I-Instructions.h"
+#include "../../CPU/CPU.h"
+#include "../../CPU/Memory.h"
 
 /*inline int32_t sixteen_to_thirtytwo(uint16_t ins.imm) {
 	return (static_cast<int32_t>(ins.imm) << 20) >> 20;
@@ -77,4 +79,10 @@ void lhu(CPU& cpu, Decoded_instruction& ins) {
 	if (ins.rd != 0) {
 		cpu.registers[ins.rd] = static_cast<uint32_t>(RAM[ins.rs1 + ins.imm]) | (RAM[ins.rs1 + ins.imm + 1] << 8);
 	}
+}
+
+
+void jalr(CPU& cpu, Decoded_instruction& ins) {
+	cpu.registers[ins.rd] = cpu.PC + 4;
+	cpu.PC = cpu.registers[ins.rs1] + ins.imm;
 }

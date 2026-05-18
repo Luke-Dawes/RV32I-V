@@ -126,6 +126,7 @@
   <ItemGroup>
     <ClCompile Include="src\CPU\CPU.cpp" />
     <ClCompile Include="src\CPU\Memory.cpp" />
+    <ClCompile Include="src\Instructions\B, U, J-type\B,U,J-instructions.cpp" />
     <ClCompile Include="src\Instructions\I-type\I-Instructions.cpp" />
     <ClCompile Include="src\Instructions\R-type\R-Instructions.cpp" />
     <ClCompile Include="src\Instructions\S-type\S-Instructions.cpp" />
@@ -134,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CPU\CPU.h" />
+    <ClInclude Include="src\Instructions\B, U, J-type\B,J,U-instructions.h" />
     <ClInclude Include="src\Instructions\I-type\I-Instructions.h" />
     <ClInclude Include="src\Instructions\Instructions.h" />
     <ClInclude Include="src\CPU\Memory.h" />

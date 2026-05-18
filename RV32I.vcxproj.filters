@@ -36,6 +36,9 @@
     <ClCompile Include="src\CPU\CPU.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Instructions\B, U, J-type\B,U,J-instructions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Instructions\Instructions.h">
@@ -57,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\CPU\CPU.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Instructions\B, U, J-type\B,J,U-instructions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

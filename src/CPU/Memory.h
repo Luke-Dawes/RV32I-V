@@ -1,14 +1,13 @@
 #pragma once
 #include <cstdint>
-#include "CPU.h"
+//#include "CPU.h"
+
+class CPU;
 
 using std::uint32_t;
 
 //little edian memory 
 extern uint8_t RAM[];
-
-constexpr auto out_of_bounds = 0x1;
-constexpr auto miss_aligned_trap = 0x2;
 
 
 

@@ -2,6 +2,7 @@
 #include "../Instructions/R-type/R-Instructions.h"
 #include "../Instructions/I-type/I-Instructions.h"
 #include "../Instructions/S-type/S-Instructions.h"
+#include "../Instructions/B, U, J-type/B,J,U-instructions.h"
 
 uint8_t RAM[0x100];
 
@@ -114,28 +115,6 @@ Decoded_instruction decode(uint32_t PC) {
 
 
 
-uint32_t fetch(uint32_t PC) {
-	if (PC + 3 >= 0x100) {
-		//throw error
-		throw out_of_bounds; //this is terminal so i dont think it can catch
-	}
-
-	if (PC % 4 != 0) {
-		throw miss_aligned_trap;
-	}
-
-
-	uint32_t data = RAM[PC] |
-		(RAM[PC + 1] << 8) |
-		(RAM[PC + 2] << 16) |
-		(RAM[PC + 3] << 24);
-
-	return data;
-}
-
-
-
-
 #define IDX(b30, f3, op) (((b30) << 10) | ((f3) << 7) | (op))
 
 InstructionFunc Instructions[2048] = { nullptr };
@@ -176,21 +155,21 @@ void init_table() {
     Instructions[IDX(0, 7, 0x33)] = _and;
 
     // --- BRANCH (Opcode 0x63) ---
-    //Instructions[IDX(0, 0, 0x63)] = beq;
-    //Instructions[IDX(0, 1, 0x63)] = bne;
-    //Instructions[IDX(0, 4, 0x63)] = blt;
-    //Instructions[IDX(0, 5, 0x63)] = bge;
-    //Instructions[IDX(0, 6, 0x63)] = bltu;
-    //Instructions[IDX(0, 7, 0x63)] = bgeu;
+    Instructions[IDX(0, 0, 0x63)] = beq;
+    Instructions[IDX(0, 1, 0x63)] = bne;
+    Instructions[IDX(0, 4, 0x63)] = blt;
+    Instructions[IDX(0, 5, 0x63)] = bge;
+    Instructions[IDX(0, 6, 0x63)] = bltu;
+    Instructions[IDX(0, 7, 0x63)] = bgeu;
 
     // --- JUMP & UPPER IMM (Various Opcodes) ---
-    //Instructions[IDX(0, 0, 0x6F)] = jal;   // Opcode 0x6F
-    //Instructions[IDX(0, 0, 0x67)] = jalr;  // Opcode 0x67 (funct3=0)
-    //Instructions[IDX(0, 0, 0x37)] = lui;   // Opcode 0x37
-    //Instructions[IDX(0, 0, 0x17)] = auipc; // Opcode 0x17
+    Instructions[IDX(0, 0, 0x6F)] = jal;   // Opcode 0x6F
+    Instructions[IDX(0, 0, 0x67)] = jalr;  // Opcode 0x67 (funct3=0)
+    Instructions[IDX(0, 0, 0x37)] = lui;   // Opcode 0x37
+    Instructions[IDX(0, 0, 0x17)] = auipc; // Opcode 0x17
 
     // --- SYSTEM (Opcode 0x73) ---
-    //Instructions[IDX(0, 0, 0x73)] = system_call; // Handles ECALL/EBREAK
+    Instructions[IDX(0, 0, 0x73)] = ecall; // Handles ECALL/EBREAK
 }
 
 void init_RAM() { //needs to move

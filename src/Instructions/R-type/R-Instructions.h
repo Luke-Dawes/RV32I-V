@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
-#include "../../CPU/Memory.h"
+
+class CPU;
+struct Decoded_instruction;
 
 void add(CPU& cpu, Decoded_instruction& ins);
 void sub(CPU& cpu, Decoded_instruction& ins);

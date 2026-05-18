@@ -3,6 +3,9 @@
 
 //uint8_t RAM[];
 
+constexpr auto out_of_bounds = 0x1;
+constexpr auto miss_aligned_trap = 0x2;
+
 struct Decoded_instruction;
 
 constexpr size_t REG_COUNT = 32;
@@ -21,8 +24,8 @@ public:
 	stage current_stage;
 
 	uint32_t registers[REG_COUNT] = { 0 };
-	uint32_t PC = {0};
-	uint32_t CIR = {0};
+	uint32_t PC = 0;
+	uint32_t CIR = 0;
 	//uint8_t* memory = &RAM[0]; //probably unused as RAM will be global
 
 private:
