@@ -72,5 +72,11 @@ void CPU::tick() { //poor set up
 	if (PC == oldPC) {
 		PC += 4;
 	}
+
+	std::cout << "PC: " << PC
+		<< " | x1: " << registers[1]
+		<< " | x2: " << registers[2]
+		<< " | x5: " << registers[5] << "\n";
+
 	std::cout << "\n";
 }

@@ -7,6 +7,7 @@
 #include <cstring>
 #include "../CPU/Memory.h"
 #include "../CPU/CPU.h"
+#include <string>
 
 //------------- Main testing function -------------------
 
@@ -816,12 +817,23 @@ void test_fibonacci_real_rv32i(CPU& cpu)
 	};
 
 	// Load program into RAM
-	memcpy(RAM, fib_program, sizeof(fib_program));
+	for (int i = 0; i < 9; i++) {
+		uint32_t inst = fib_program[i];
+		RAM[i * 4 + 0] = (uint8_t)(inst & 0xFF);         // Lowest byte
+		RAM[i * 4 + 1] = (uint8_t)((inst >> 8) & 0xFF);
+		RAM[i * 4 + 2] = (uint8_t)((inst >> 16) & 0xFF);
+		RAM[i * 4 + 3] = (uint8_t)((inst >> 24) & 0xFF); // Highest byte
+	}
 
 	// Run enough cycles
 	for (int i = 0; i < 50; i++)
 		cpu.tick();
 
 	// Expected Fibonacci result
-	assert(cpu.registers[2] == 55 && "fib failed (x2 should be 55)");
+
+	std::string error2 = "fib failed (x2 should be 89) but is " + std::to_string(cpu.registers[2]);
+	std::string error1 = "fib failed (x1 should be 55) but is " + std::to_string(cpu.registers[1]);
+
+	assert(cpu.registers[2] == 89 && error2.c_str());
+	assert(cpu.registers[1] == 55 && error1.c_str());
 }
