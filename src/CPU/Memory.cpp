@@ -9,16 +9,16 @@ uint8_t RAM[0x100];
 //constexpr auto out_of_bounds = 0x1;
 //constexpr auto miss_aligned_trap = 0x2;
 
-Decoded_instruction decode(uint32_t PC) {
-    Decoded_instruction d;
+Decoded_instruction decode_ins(uint32_t ins) {
+    Decoded_instruction d{};
 
     
-    d.opcode = PC & 0x7F;
-    d.rd = (PC >> 7) & 0x1F;
-    d.funct3 = (PC >> 12) & 0x7;
-    d.rs1 = (PC >> 15) & 0x1F;
-    d.rs2 = (PC >> 20) & 0x1F;
-    d.funct7 = (PC >> 25) & 0x7F;
+    d.opcode = ins & 0x7F;
+    d.rd = (ins >> 7) & 0x1F;
+    d.funct3 = (ins >> 12) & 0x7;
+    d.rs1 = (ins >> 15) & 0x1F;
+    d.rs2 = (ins >> 20) & 0x1F;
+    d.funct7 = (ins >> 25) & 0x7F;
 
     switch (d.opcode)
     {
@@ -35,7 +35,7 @@ Decoded_instruction decode(uint32_t PC) {
     {
         d.type = Instruction_type::I;
 
-        d.imm = (int32_t)PC >> 20; // sign-extend 12-bit
+        d.imm = (int32_t)ins >> 20; // sign-extend 12-bit
         break;
     }
 
@@ -45,8 +45,8 @@ Decoded_instruction decode(uint32_t PC) {
         d.type = Instruction_type::S;
 
         int32_t imm =
-            ((PC >> 7) & 0x1F) |
-            ((PC >> 25) & 0x7F) << 5;
+            ((ins >> 7) & 0x1F) |
+            ((ins >> 25) & 0x7F) << 5;
 
         // sign-extend 12-bit
         if (imm & 0x800)
@@ -62,10 +62,10 @@ Decoded_instruction decode(uint32_t PC) {
         d.type = Instruction_type::B;
 
         int32_t imm =
-            ((PC >> 8) & 0x0F) << 1 |  // bits 4:1
-            ((PC >> 25) & 0x3F) << 5 |  // bits 10:5
-            ((PC >> 7) & 0x01) << 11 |  // bit 11
-            ((PC >> 31) & 0x01) << 12;   // bit 12 (sign)
+            ((ins >> 8) & 0x0F) << 1 |  // bits 4:1
+            ((ins >> 25) & 0x3F) << 5 |  // bits 10:5
+            ((ins >> 7) & 0x01) << 11 |  // bit 11
+            ((ins >> 31) & 0x01) << 12;   // bit 12 (sign)
 
         // sign-extend 13-bit
         if (imm & 0x1000)
@@ -80,7 +80,7 @@ Decoded_instruction decode(uint32_t PC) {
     case 0x17: // AUIPC
     {
         d.type = Instruction_type::U;
-        d.imm = (int32_t)(PC & 0xFFFFF000);
+        d.imm = (int32_t)(ins & 0xFFFFF000);
         break;
     }
 
@@ -90,10 +90,10 @@ Decoded_instruction decode(uint32_t PC) {
         d.type = Instruction_type::J;
 
         int32_t imm =
-            ((PC >> 21) & 0x3FF) << 1 |  // bits 10:1
-            ((PC >> 20) & 0x1) << 11 |  // bit 11
-            ((PC >> 12) & 0xFF) << 12 |  // bits 19:12
-            ((PC >> 31) & 0x1) << 20;   // sign bit
+            ((ins >> 21) & 0x3FF) << 1 |  // bits 10:1
+            ((ins >> 20) & 0x1) << 11 |  // bit 11
+            ((ins >> 12) & 0xFF) << 12 |  // bits 19:12
+            ((ins >> 31) & 0x1) << 20;   // sign bit
 
         // sign-extend 21-bit
         if (imm & 0x100000)

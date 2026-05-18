@@ -31,9 +31,9 @@ struct Decoded_instruction {
     uint8_t funct7;
 };
 
-Decoded_instruction decode(uint32_t PC);
+Decoded_instruction decode_ins(uint32_t PC);
 
-uint32_t fetch(uint32_t PC);
+void init_table();
 
 void init_RAM();
 

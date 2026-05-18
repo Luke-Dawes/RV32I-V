@@ -1,5 +1,6 @@
 #include "../src/Testing/Testing.h"
 #include "../src/CPU/Memory.h"
+#include "../src/CPU/CPU.h"
 
 
 int main() {

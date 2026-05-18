@@ -24,5 +24,5 @@ void lbu(CPU& cpu, Decoded_instruction& ins);
 void lhu(CPU& cpu, Decoded_instruction& ins);
 
 void jalr(CPU& cpu, Decoded_instruction& ins);
-void ecall(CPU& cpu, Decoded_instruction& ins) {}
-void ebreak(CPU& cpu, Decoded_instruction& ins) {}
+void ecall(CPU& cpu, Decoded_instruction& ins);
+void ebreak(CPU& cpu, Decoded_instruction& ins);

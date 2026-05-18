@@ -17,7 +17,7 @@ enum stage {
 
 class CPU {
 public:
-	CPU() = default;
+	CPU();
 
 	void tick();
 
@@ -31,5 +31,6 @@ public:
 private:
 	uint32_t fetch();
 	//decode is in the memory file 
-	void execute(const Decoded_instruction& ins); //idk where im storing this 
+	Decoded_instruction decode(uint32_t ins);
+	void execute(const Decoded_instruction ins); //idk where im storing this 
 };
