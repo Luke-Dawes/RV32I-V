@@ -19,6 +19,7 @@ Decoded_instruction decode_ins(uint32_t ins) {
     d.rs1 = (ins >> 15) & 0x1F;
     d.rs2 = (ins >> 20) & 0x1F;
     d.funct7 = (ins >> 25) & 0x7F;
+    d.b30 = (ins >> 30) & 0x1;
 
     switch (d.opcode)
     {
@@ -63,7 +64,7 @@ Decoded_instruction decode_ins(uint32_t ins) {
 
         int32_t imm =
             ((ins >> 8) & 0x0F) << 1 |  // bits 4:1
-            ((ins >> 25) & 0x3F) << 5 |  // bits 10:5
+            ((ins >> 25) & 0x7F) << 5 |  // bits 10:5
             ((ins >> 7) & 0x01) << 11 |  // bit 11
             ((ins >> 31) & 0x01) << 12;   // bit 12 (sign)
 
@@ -115,7 +116,7 @@ Decoded_instruction decode_ins(uint32_t ins) {
 
 
 
-#define IDX(b30, f3, op) (((b30) << 10) | ((f3) << 7) | (op))
+#define IDX(b30, f3, op) ((((b30) & 0x1) << 10) | (((f3) & 0x7) << 7) | ((op) & 0x7F))
 
 InstructionFunc Instructions[2048] = { nullptr };
 
@@ -170,6 +171,61 @@ void init_table() {
 
     // --- SYSTEM (Opcode 0x73) ---
     Instructions[IDX(0, 0, 0x73)] = ecall; // Handles ECALL/EBREAK
+
+
+        instruction_debug_table = {
+        // --- LOAD (Opcode 0x03) ---
+        { IDX(0, 0, 0x03), "lb" },
+        { IDX(0, 1, 0x03), "lh" },
+        { IDX(0, 2, 0x03), "lw" },
+        { IDX(0, 4, 0x03), "lbu" },
+        { IDX(0, 5, 0x03), "lhu" },
+
+        // --- STORE (Opcode 0x23) ---
+        { IDX(0, 0, 0x23), "sb" },
+        { IDX(0, 1, 0x23), "sh" },
+        { IDX(0, 2, 0x23), "sw" },
+
+        // --- INTEGER REG-IMM (Opcode 0x13) ---
+        { IDX(0, 0, 0x13), "addi" },
+        { IDX(0, 2, 0x13), "slti" },
+        { IDX(0, 3, 0x13), "sltiu" },
+        { IDX(0, 4, 0x13), "xori" },
+        { IDX(0, 6, 0x13), "ori" },
+        { IDX(0, 7, 0x13), "andi" },
+        { IDX(0, 1, 0x13), "slli" },
+        { IDX(0, 5, 0x13), "srli" },
+        { IDX(1, 5, 0x13), "srai" },
+
+        // --- INTEGER REG-REG (Opcode 0x33) ---
+        { IDX(0, 0, 0x33), "add" },
+        { IDX(1, 0, 0x33), "sub" },
+        { IDX(0, 1, 0x33), "sll" },
+        { IDX(0, 2, 0x33), "slt" },
+        { IDX(0, 3, 0x33), "sltu" },
+        { IDX(0, 4, 0x33), "xor" },
+        { IDX(0, 5, 0x33), "srl" },
+        { IDX(1, 5, 0x33), "sra" },
+        { IDX(0, 6, 0x33), "or" },
+        { IDX(0, 7, 0x33), "and" },
+
+        // --- BRANCH (Opcode 0x63) ---
+        { IDX(0, 0, 0x63), "beq" },
+        { IDX(0, 1, 0x63), "bne" },
+        { IDX(0, 4, 0x63), "blt" },
+        { IDX(0, 5, 0x63), "bge" },
+        { IDX(0, 6, 0x63), "bltu" },
+        { IDX(0, 7, 0x63), "bgeu" },
+
+        // --- JUMP & UPPER IMM (Various Opcodes) ---
+        { IDX(0, 0, 0x6F), "jal" },
+        { IDX(0, 0, 0x67), "jalr" },
+        { IDX(0, 0, 0x37), "lui" },
+        { IDX(0, 0, 0x17), "auipc" },
+
+        // --- SYSTEM (Opcode 0x73) ---
+        { IDX(0, 0, 0x73), "ecall" }
+    };
 }
 
 void init_RAM() { //needs to move

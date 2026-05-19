@@ -1,5 +1,7 @@
 #pragma once
 #include <cstdint>
+#include <unordered_map>
+#include <string>
 //#include "CPU.h"
 
 class CPU;
@@ -29,6 +31,7 @@ struct Decoded_instruction {
     uint8_t opcode;
     uint8_t funct3;
     uint8_t funct7;
+    uint32_t b30;
 };
 
 Decoded_instruction decode_ins(uint32_t PC);
@@ -42,3 +45,4 @@ void init_RAM();
 typedef void (*InstructionFunc)(CPU& cpu, Decoded_instruction& ins);
 
 extern InstructionFunc Instructions[];
+inline std::unordered_map<uint32_t, std::string> instruction_debug_table;

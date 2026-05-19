@@ -38,21 +38,29 @@ Decoded_instruction CPU::decode(uint32_t ins) {
 
 void CPU::execute(Decoded_instruction d) {
 
-#define IDX(b30, f3, op) (((b30) << 10) | ((f3) << 7) | (op))
+#define IDX(b30, f3, op) ((b30) | (((f3) & 0x7) << 7) | ((op) & 0x7F))
 
 	std::cout << "PC = " << std::hex << PC << std::endl;
 
-	auto key = IDX((d.funct7 >> 5) & 1, d.funct3, d.opcode);
+	uint32_t key = IDX(d.b30, d.funct3, d.opcode);
 
 	std::cout << std::hex
 		<< "key=" << key
-		<< " op=" << d.opcode
-		<< " f3=" << d.funct3
-		<< " f7=" << d.funct7
+		<< " op=" << (int)d.opcode
+		<< " f3=" << (int)d.funct3
+		<< " f7=" << (int)d.funct7
+		<< " b30=" << (int)d.b30
 		<< std::endl;
 
 	if (Instructions[key] != nullptr) {
-		std::cout << "instruction is " << Instructions[key] << "\n";
+		auto it = instruction_debug_table.find(key);
+		if (it != instruction_debug_table.end()) {
+			std::cout << "instruction is " << it->second << "\n";
+		}
+		else
+		{
+			std::cout << "instruction found in instruction table but not map";
+		}
 		Instructions[key](*this, d);
 	}
 	else {
