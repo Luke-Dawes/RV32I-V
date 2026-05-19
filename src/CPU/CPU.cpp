@@ -83,7 +83,9 @@ void CPU::tick() { //poor set up
 	std::cout << "PC: " << PC
 		<< " | x1: " << registers[1]
 		<< " | x2: " << registers[2]
-		<< " | x5: " << registers[5] << "\n";
+		<< " | x3: " << registers[3]
+		<< " | x5: " << registers[5] 
+		<< "\n";
 
 	std::cout << "\n";
 }

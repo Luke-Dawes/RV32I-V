@@ -856,7 +856,7 @@ void test_add_five_with_branch_rv32i(CPU& cpu)
 		// --- LOOP TARGET BEGINS HERE ---
 		0x00108093, // PC=4:  addi x1, x1, 1    (Increment target x1 by 1)
 		0xFFF18193, // PC=8:  addi x3, x3, -1   (Decrement loop counter x3)
-		0xFE011CE3, // PC=C:  bne x3, x0, -8    (If x3 != 0, jump back to PC=4)
+		0xFE019CE3, // PC=C:  bne x3, x0, -8    (If x3 != 0, jump back to PC=4)
 		0x0000006F  // PC=10: jal x0, 0         (Halt infinite loop)
 	};
 
