@@ -8,6 +8,7 @@
 #include "../CPU/Memory.h"
 #include "../CPU/CPU.h"
 #include <string>
+#include <iostream>
 
 //------------- Main testing function -------------------
 
@@ -54,7 +55,9 @@ void run_tests(CPU& cpu) {
 	test_jal(cpu);
 	test_jalr(cpu);
 	test_program_execution(cpu);
-	test_fibonacci_real_rv32i(cpu);
+	//test_add_five_without_branch_rv32i(cpu);
+	test_add_five_with_branch_rv32i(cpu);
+	//test_fibonacci_real_rv32i(cpu);
 
 
 
@@ -836,4 +839,81 @@ void test_fibonacci_real_rv32i(CPU& cpu)
 
 	assert(cpu.registers[2] == 89 && error2.c_str());
 	assert(cpu.registers[1] == 55 && error1.c_str());
+}
+
+void test_add_five_with_branch_rv32i(CPU& cpu)
+{
+	memset(RAM, 0, 0x100);
+
+	for (int i = 0; i < 32; i++)
+		cpu.registers[i] = 0;
+
+	cpu.PC = 0;
+
+	// RISC-V RV32I Machine Code
+	uint32_t add_program[] = {
+		0x00500193, // PC=0:  li x3, 5          (Initialize loop counter x3 = 5)
+		// --- LOOP TARGET BEGINS HERE ---
+		0x00108093, // PC=4:  addi x1, x1, 1    (Increment target x1 by 1)
+		0xFFF18193, // PC=8:  addi x3, x3, -1   (Decrement loop counter x3)
+		0xFE011CE3, // PC=C:  bne x3, x0, -8    (If x3 != 0, jump back to PC=4)
+		0x0000006F  // PC=10: jal x0, 0         (Halt infinite loop)
+	};
+
+	// Load program into RAM
+	for (int i = 0; i < 5; i++) {
+		uint32_t inst = add_program[i];
+		RAM[i * 4 + 0] = (uint8_t)(inst & 0xFF);
+		RAM[i * 4 + 1] = (uint8_t)((inst >> 8) & 0xFF);
+		RAM[i * 4 + 2] = (uint8_t)((inst >> 16) & 0xFF);
+		RAM[i * 4 + 3] = (uint8_t)((inst >> 24) & 0xFF);
+	}
+
+	// Run enough cycles
+	for (int i = 0; i < 30; i++)
+		cpu.tick();
+
+	// Expected result check
+	std::string error_msg = "Add test failed (x1 should be 5) but is " + std::to_string(cpu.registers[1]);
+	assert(cpu.registers[1] == 5 && error_msg.c_str());
+}
+
+void test_add_five_without_branch_rv32i(CPU& cpu)
+{
+	memset(RAM, 0, 0x100);
+
+	for (int i = 0; i < 32; i++)
+		cpu.registers[i] = 0;
+
+	cpu.PC = 0;
+
+	// RISC-V RV32I Machine Code
+	uint32_t add_program[] = {
+		0x00108093, // addi x1, x1, 1 (1st add)
+		0x00108093, // addi x1, x1, 1 (2nd add)
+		0x00108093, // addi x1, x1, 1 (3rd add)
+		0x00108093, // addi x1, x1, 1 (4th add)
+		0x00108093, // addi x1, x1, 1 (5th add)
+		0x0000006F  // jal x0, 0      (Halt/Jump to self permanently)
+	};
+
+	// Load program into RAM
+	for (int i = 0; i < 6; i++) {
+		uint32_t inst = add_program[i];
+		RAM[i * 4 + 0] = (uint8_t)(inst & 0xFF);
+		RAM[i * 4 + 1] = (uint8_t)((inst >> 8) & 0xFF);
+		RAM[i * 4 + 2] = (uint8_t)((inst >> 16) & 0xFF);
+		RAM[i * 4 + 3] = (uint8_t)((inst >> 24) & 0xFF);
+	}
+
+	// Run enough cycles
+	for (int i = 0; i < 7; i++)
+		cpu.tick();
+
+	// Expected result check
+	std::string error_msg = "Add test failed (x1 should be 5) but is " + std::to_string(cpu.registers[1]);
+	assert(cpu.registers[1] == 5 && error_msg.c_str());
+	std::cout << "PC=" << std::hex << cpu.PC << "\n";
+	assert(cpu.PC == 0x14 && "PC moved above 14 when it should be stuck there");
+	std::cout << "test_add_five_without_branch worked \n\n\n\n";
 }

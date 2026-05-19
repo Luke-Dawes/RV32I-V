@@ -69,15 +69,14 @@ void CPU::execute(Decoded_instruction d) {
 }
 
 void CPU::tick() { //poor set up
+	branch_happended = false;
 	uint32_t ins = fetch();
 
 	Decoded_instruction d = decode(ins);
-
-	uint32_t oldPC = PC;
 	 
 	execute(d);
 
-	if (PC == oldPC) {
+	if (!branch_happended) {
 		PC += 4;
 	}
 

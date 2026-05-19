@@ -63,3 +63,5 @@ void test_ebreak(CPU& cpu);
 
 void test_program_execution(CPU& cpu);
 void test_fibonacci_real_rv32i(CPU& cpu);
+void test_add_five_with_branch_rv32i(CPU& cpu);
+void test_add_five_without_branch_rv32i(CPU& cpu);

@@ -36,7 +36,16 @@ Decoded_instruction decode_ins(uint32_t ins) {
     {
         d.type = Instruction_type::I;
 
-        d.imm = (int32_t)ins >> 20; // sign-extend 12-bit
+        int32_t imm = ins >> 20;
+
+        // 2. Explicitly sign-extend if bit 11 of the immediate (bit 31 of the instruction) is 1
+        if (imm & 0x800) {
+            imm |= 0xFFFFF000;
+        }
+
+        d.imm = imm;
+
+        
         break;
     }
 
@@ -64,7 +73,7 @@ Decoded_instruction decode_ins(uint32_t ins) {
 
         int32_t imm =
             ((ins >> 8) & 0x0F) << 1 |  // bits 4:1
-            ((ins >> 25) & 0x7F) << 5 |  // bits 10:5
+            ((ins >> 25) & 0x3F) << 5 |  // bits 10:5
             ((ins >> 7) & 0x01) << 11 |  // bit 11
             ((ins >> 31) & 0x01) << 12;   // bit 12 (sign)
 

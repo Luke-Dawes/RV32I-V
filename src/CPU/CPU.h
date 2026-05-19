@@ -22,7 +22,7 @@ public:
 	void tick();
 
 	stage current_stage;
-
+	bool branch_happended;
 	uint32_t registers[REG_COUNT] = { 0 };
 	uint32_t PC = 0;
 	uint32_t CIR = 0;
