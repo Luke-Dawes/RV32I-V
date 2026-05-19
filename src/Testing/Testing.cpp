@@ -56,8 +56,8 @@ void run_tests(CPU& cpu) {
 	test_jalr(cpu);
 	test_program_execution(cpu);
 	//test_add_five_without_branch_rv32i(cpu);
-	test_add_five_with_branch_rv32i(cpu);
-	//test_fibonacci_real_rv32i(cpu);
+	//test_add_five_with_branch_rv32i(cpu);
+	test_fibonacci_real_rv32i(cpu);
 
 
 
@@ -806,17 +806,20 @@ void test_fibonacci_real_rv32i(CPU& cpu)
 	cpu.PC = 0;
 
 	uint32_t fib_program[] = {
-		0x00000093,
-		0x00100113,
-		0x00A00293,
+		// --- Initialization Phase ---
+		0x00000093, // PC = 0x00:  addi x1, x0, 0   (x1 = 0 + 0)
+		0x00100113, // PC = 0x04:  addi x2, x0, 1   (x2 = 0 + 1)
+		0x00A00293, // PC = 0x08:  addi x5, x0, 10  (x5 = 0 + 10)
 
-		0x002081B3,
-		0x00010113,
-		0x00018293,
-		0xFFF28293,
+		// --- Loop Body ---
+		0x002081B3, // PC = 0x0C:  add x3, x1, x2   (x3 = x1 + x2)
+		0x00010113, // PC = 0x10:  addi x1, x2, 0   (x1 = x2 + 0)
+		0x00018293, // PC = 0x14:  addi x2, x3, 0   (x2 = x3 + 0)
+		0xFFF28293, // PC = 0x18:  addi x5, x5, -1  (x5 = x5 + -1)
 
-		0xFE519CE3,
-		0x0000006F
+		// --- Loop Control & Exit ---
+		0xFE519CE3, // PC = 0x1C:  bne x5, x0, -16  (if x5 != x0, jump to PC 0x0C)
+		0x0000006F  // PC = 0x20:  jal x0, 0        (jump to PC 0x20, trap loop)
 	};
 
 	// Load program into RAM

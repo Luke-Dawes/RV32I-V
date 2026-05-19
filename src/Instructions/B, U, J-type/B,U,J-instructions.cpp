@@ -54,6 +54,7 @@ void jal(CPU& cpu, Decoded_instruction& ins) {
 	cpu.registers[ins.rd] = cpu.PC + 4; 
 	cpu.PC += ins.imm;
 	std::cout << "JAL happended and PC is currently =" << cpu.PC << "\n";
+	cpu.branch_happended = true;
 
 }
 
