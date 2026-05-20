@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\assembler\Assembler.cpp" />
     <ClCompile Include="src\CPU\CPU.cpp" />
     <ClCompile Include="src\CPU\Memory.cpp" />
     <ClCompile Include="src\Instructions\B, U, J-type\B,U,J-instructions.cpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="src\Testing\Testing.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\assembler\Assembler.h" />
     <ClInclude Include="src\CPU\CPU.h" />
     <ClInclude Include="src\Instructions\B, U, J-type\B,J,U-instructions.h" />
     <ClInclude Include="src\Instructions\I-type\I-Instructions.h" />

@@ -813,12 +813,12 @@ void test_fibonacci_real_rv32i(CPU& cpu)
 
 		// --- Loop Body ---
 		0x002081B3, // PC = 0x0C:  add x3, x1, x2   (x3 = x1 + x2)
-		0x00010113, // PC = 0x10:  addi x1, x2, 0   (x1 = x2 + 0)
-		0x00018293, // PC = 0x14:  addi x2, x3, 0   (x2 = x3 + 0)
+		0x00010093, // PC = 0x10:  addi x1, x2, 0   (x1 = x2 + 0)
+		0x00018113, // PC = 0x14:  addi x2, x3, 0   (x2 = x3 + 0)
 		0xFFF28293, // PC = 0x18:  addi x5, x5, -1  (x5 = x5 + -1)
 
 		// --- Loop Control & Exit ---
-		0xFE519CE3, // PC = 0x1C:  bne x5, x0, -16  (if x5 != x0, jump to PC 0x0C)
+		0xFE0298E3, // PC = 0x1C:  bne x5, x0, -16  (if x5 != x0, jump to PC 0x0C)
 		0x0000006F  // PC = 0x20:  jal x0, 0        (jump to PC 0x20, trap loop)
 	};
 
@@ -835,13 +835,9 @@ void test_fibonacci_real_rv32i(CPU& cpu)
 	for (int i = 0; i < 50; i++)
 		cpu.tick();
 
-	// Expected Fibonacci result
-
-	std::string error2 = "fib failed (x2 should be 89) but is " + std::to_string(cpu.registers[2]);
-	std::string error1 = "fib failed (x1 should be 55) but is " + std::to_string(cpu.registers[1]);
-
-	assert(cpu.registers[2] == 89 && error2.c_str());
-	assert(cpu.registers[1] == 55 && error1.c_str());
+	//remember cpu.registers is printed via a hex number, meaning that it wont be 89
+	assert(cpu.registers[3] == 89 && "fib register 3 fail");
+	assert(cpu.registers[1] == 55 && "fib register 1 fail");
 }
 
 void test_add_five_with_branch_rv32i(CPU& cpu)
