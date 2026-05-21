@@ -7,14 +7,36 @@
 	* find a full word - i.e. find the next space
 	* 
 	* parser
-	* go from addi to that opcode.
+	* go from addi to that opcode - done using a simple map 
 	* 
 	* find the parameters i.e. what addi takes in (rd/rs1/rs2/imm etc)
-	* 
+	* this can be a simple switch case statement based on format
 	* 
 	* 
 	* 
 */
+
+class Assembler {
+
+    std::string current;
+
+    
+
+public:
+
+    std::vector<uint32_t> parse();
+
+    Assembler() = default;
+
+    Assembler(std::string t) {
+        current = t;
+    }
+
+    void update_string(std::string t) {
+        current = t;
+    }
+
+};
 
 enum class Format {
     R_TYPE,
@@ -85,4 +107,14 @@ const std::unordered_map<std::string, EncodingInfo> encoding = {
     {"fence", {0x0000000F, Format::I_TYPE}},
     {"ecall", {0x00000073, Format::SYSTEM}},
     {"ebreak",{0x00100073, Format::SYSTEM}}
+};
+
+const std::unordered_map<std::string, uint32_t> register_to_number = {
+    {"r1", 1},
+    {"1", 1},
+    {"x1", 1},
+    {"r2", 2},
+    {"2", 2},
+    {"x2", 2}
+
 };
