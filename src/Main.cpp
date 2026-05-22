@@ -9,7 +9,7 @@ int main() {
 	init_RAM();
 	//run_tests(cpu);
 
-	Assembler assembler("addi x1 x2 2");
+	Assembler assembler("add x1 x2 x1");
 
 	assembler.parse();
 

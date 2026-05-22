@@ -55,8 +55,8 @@ void run_tests(CPU& cpu) {
 	test_jal(cpu);
 	test_jalr(cpu);
 	test_program_execution(cpu);
-	//test_add_five_without_branch_rv32i(cpu);
-	//test_add_five_with_branch_rv32i(cpu);
+	test_add_five_without_branch_rv32i(cpu);
+	test_add_five_with_branch_rv32i(cpu);
 	test_fibonacci_real_rv32i(cpu);
 
 

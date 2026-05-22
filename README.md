@@ -14,9 +14,11 @@ https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.
 
 # long term aim
 
-build this, with the base 40 instructions 
+build this, with the base 40 instructions - done
 
-build a like interpreter which translates python or c++ or some sort of psuedocode to these instructions.
+build a like interpreter which translates python or c++ or some sort of psuedocode to these instructions. - partially done - building assembler for assembly.
+
+## left to do
 
 add pipelining with threading 
 
