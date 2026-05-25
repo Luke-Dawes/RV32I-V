@@ -9,7 +9,7 @@ int main() {
 	init_RAM();
 	//run_tests(cpu);
 
-	Assembler assembler("beq x1 x2 -4");
+	Assembler assembler("lui x1, 20480");
 
 	assembler.parse();
 
