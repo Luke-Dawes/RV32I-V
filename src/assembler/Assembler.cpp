@@ -7,7 +7,10 @@
 #include <format>
 
 
-std::vector<uint32_t> Assembler::parse() {
+std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like labels for the jump instructions
+
+	//look through the code and find any labels - found by .whatever, and calculate what byte they are 
+
 
 	//find each part split by "\n"
 	std::vector<uint32_t> final_code;
@@ -173,7 +176,56 @@ std::vector<uint32_t> Assembler::parse() {
 			}
 				break;
 
-			case Format::B_TYPE:
+			case Format::B_TYPE: {
+
+				if (++it == words_view.end()) continue;
+				auto rs1_range = *it;
+				std::string_view rs1_str(rs1_range.begin(), rs1_range.end());
+				if (!rs1_str.empty() && rs1_str.back() == ',') {
+					rs1_str.remove_suffix(1);
+				}
+				if (++it == words_view.end()) continue;
+				auto rs2_range = *it;
+				std::string_view rs2_str(rs2_range.begin(), rs2_range.end());
+				if (!rs2_str.empty() && rs2_str.back() == ',') {
+					rs2_str.remove_suffix(1);
+				}
+
+				if (++it == words_view.end()) continue;
+				auto imm_range = *it;
+				std::string_view imm_str(imm_range.begin(), imm_range.end());
+
+				int immediate_value = 0;
+				auto [ptr, ec] = std::from_chars(imm_str.data(), imm_str.data() + imm_str.size(), immediate_value);
+
+				if (ec != std::errc()) {
+					// Handle malformed immediate error here
+					continue;
+				}
+
+				auto rs1_it = register_to_number.find(std::string(rs1_str));
+				auto rs2_it = register_to_number.find(std::string(rs2_str));
+
+				if (rs1_it == register_to_number.end() || rs2_it == register_to_number.end()) {
+					// Handle error: Unknown register name
+					continue;
+				}
+
+				uint32_t rs1_num = rs1_it->second;
+				uint32_t rs2_num = rs2_it->second;
+
+				instruction |= (rs1_num << 15);
+				instruction |= (rs2_num << 20);
+				instruction |= (((immediate_value >> 11) & 1) << 7);
+				instruction |= (((immediate_value >> 1) & 0xF) << 8);
+				instruction |= (((immediate_value >> 5) & 0x3F) << 25);
+				instruction |= (((immediate_value >> 12) & 1) << 31);
+
+				final_code.push_back(instruction);
+
+			}
+				break;
+
 			case Format::J_TYPE:
 			case Format::U_TYPE:
 
