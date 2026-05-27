@@ -10,7 +10,8 @@
 std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like labels for the jump instructions
 
 	//look through the code and find any labels - found by .whatever, and calculate what byte they are 
-
+	first_pass();
+	curr_PC = 0;
 
 	//find each part split by "\n"
 	std::vector<uint32_t> final_code;
@@ -81,6 +82,7 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 				instruction |= ((static_cast<uint32_t>(immediate_value) & 0xFFF) << 20);
 
 				final_code.push_back(instruction);
+				curr_PC += 4;
 
 		}
 				break;
@@ -124,6 +126,7 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 				instruction |= (rs2_num << 20);
 
 				final_code.push_back(instruction);
+				curr_PC += 4;
 
 			}
 				break;
@@ -173,6 +176,7 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 				instruction |= (((immediate_value >> 5) & 0x7F) << 25);
 
 				final_code.push_back(instruction);
+				curr_PC += 4;
 			}
 				break;
 
@@ -194,13 +198,21 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 				if (++it == words_view.end()) continue;
 				auto imm_range = *it;
 				std::string_view imm_str(imm_range.begin(), imm_range.end());
-
 				int immediate_value = 0;
-				auto [ptr, ec] = std::from_chars(imm_str.data(), imm_str.data() + imm_str.size(), immediate_value);
 
-				if (ec != std::errc()) {
-					// Handle malformed immediate error here
-					continue;
+				if (!symbol_table.contains((std::string)imm_str)) {
+
+
+					auto [ptr, ec] = std::from_chars(imm_str.data(), imm_str.data() + imm_str.size(), immediate_value);
+
+					if (ec != std::errc()) {
+						// Handle malformed immediate error here
+						continue;
+					}
+				}
+				else
+				{
+					immediate_value = symbol_table[(std::string)imm_str] - curr_PC;
 				}
 
 				auto rs1_it = register_to_number.find(std::string(rs1_str));
@@ -222,6 +234,7 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 				instruction |= (((immediate_value >> 12) & 1) << 31);
 
 				final_code.push_back(instruction);
+				curr_PC += 4;
 
 			}
 				break;
@@ -259,14 +272,65 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 				instruction |= (rd_num << 7);
 				instruction |= (((immediate_value >> 12) & 0xFFFFF) << 12);
 				final_code.push_back(instruction);
+				curr_PC += 4;
 
 			}
 				break;
-			case Format::J_TYPE:
+
+			case Format::J_TYPE: {
+
+				if (++it == words_view.end()) continue;
+				auto rd_range = *it;
+				std::string_view rd_str(rd_range.begin(), rd_range.end());
+				if (!rd_str.empty() && rd_str.back() == ',') {
+					rd_str.remove_suffix(1);
+				}
+
+				if (++it == words_view.end()) continue;
+				auto imm_range = *it;
+				std::string_view imm_str(imm_range.begin(), imm_range.end());
+				int immediate_value = 0;
+
+				if (!symbol_table.contains((std::string)imm_str)) {
+
+					
+					auto [ptr, ec] = std::from_chars(imm_str.data(), imm_str.data() + imm_str.size(), immediate_value);
+
+					if (ec != std::errc()) {
+						// Handle malformed immediate error here
+						continue;
+					}
+				} 
+				else
+				{
+					immediate_value = symbol_table[(std::string)imm_str] - curr_PC;
+				}
+				auto rd_it = register_to_number.find(std::string(rd_str));
+
+				if (rd_it == register_to_number.end()) {
+					// Handle error: Unknown register name
+					continue;
+				}
+
+				uint32_t rd_num = rd_it->second;
+
+				instruction |= (rd_num << 7);
+
+				instruction |= (((immediate_value >> 12) & 0x7F) << 12);
+				instruction |= (((immediate_value >> 11) & 1) << 20);
+				instruction |= (((immediate_value >> 1) & 0x3FF) << 21);
+				instruction |= (((immediate_value >> 20) & 1) << 31);
+
+				final_code.push_back(instruction);
+				curr_PC += 4;
+			}
+				break;
 
 			default:
 				break;
 		}
+
+		
 
 	}
 	
@@ -275,4 +339,33 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 
 	}
 	return final_code;
+}
+
+void Assembler::first_pass() {
+	for (auto&& line_range : current | std::views::split('\n')) {
+
+		auto words_view = line_range | std::views::split(' ');
+		auto it = words_view.begin();
+
+		if (it == words_view.end()) continue;
+
+		auto first_word_range = *it;
+		std::string_view first_word(first_word_range.begin(), first_word_range.end());
+
+		if (first_word.empty()) continue;
+
+		if (encoding.count(std::string(first_word)))
+		{
+			curr_PC += 4;
+			continue;
+		}
+
+		std::string word = std::string(first_word);
+		if (word.back() == ':') {
+			word = word.substr(0, word.size() - 1);
+		}
+
+		symbol_table.insert({ word, curr_PC });
+		//curr_PC += 4;
+	}
 }
