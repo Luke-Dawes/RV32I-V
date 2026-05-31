@@ -76,6 +76,8 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 					
 				if (ec != std::errc()) {
 					// Handle malformed immediate error here
+					std::cerr << "Assembler Error: Malformed immediate [" << (std::string)imm_str << "]\n";
+
 					continue;
 				}
 
@@ -84,6 +86,7 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 
 				if (rd_it == register_to_number.end() || rs1_it == register_to_number.end()) {
 					// Handle error: Unknown register name
+
 					continue;
 				}
 
@@ -240,6 +243,7 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 
 				uint32_t rs1_num = rs1_it->second;
 				uint32_t rs2_num = rs2_it->second;
+				immediate_value >>= 1;
 
 				instruction |= (rs1_num << 15);
 				instruction |= (rs2_num << 20);
@@ -283,6 +287,8 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 				}
 
 				uint32_t rd_num = rd_it->second;
+
+				
 
 				instruction |= (rd_num << 7);
 				instruction |= (((immediate_value >> 12) & 0xFFFFF) << 12);
@@ -332,6 +338,8 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 				uint32_t rd_num = rd_it->second;
 
 				instruction |= (rd_num << 7);
+
+				immediate_value >>= 1;
 
 				instruction |= (((immediate_value >> 12) & 0x7F) << 12);
 				instruction |= (((immediate_value >> 11) & 1) << 20);
@@ -436,6 +444,9 @@ void Assembler::parse_into_vector() {
 	std::string_view text_view(current);
 
 	while (!text_view.empty()) {
+
+		
+
 		size_t newline_pos = text_view.find('\n');
 		std::string_view line = (newline_pos == std::string_view::npos)
 			? text_view
@@ -450,10 +461,13 @@ void Assembler::parse_into_vector() {
 			line.remove_prefix(first_real_char);
 		}
 		else {
-			continue; // The line was entirely spaces, make it empty
+			line = ""; // The line was entirely spaces, make it empty
 		}
 
-		text.emplace_back(line);
+		if (line != "") {
+			std::cout << line << "\n";
+			text.emplace_back(line);
+		}
 
 		if (newline_pos == std::string_view::npos) {
 			break;
