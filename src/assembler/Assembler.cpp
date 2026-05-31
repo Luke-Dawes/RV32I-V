@@ -10,6 +10,7 @@
 std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like labels for the jump instructions
 
 	//look through the code and find any labels - found by .whatever, and calculate what byte they are 
+	parse_into_vector();
 	first_pass();
 	curr_PC = 0;
 
@@ -27,6 +28,18 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 		std::string_view first_word(first_word_range.begin(), first_word_range.end());
 
 		if (first_word.empty()) continue;
+
+		if (first_word.front() == '#') continue;
+
+		size_t actual_text_start = first_word.find_first_not_of(" \t");
+
+		if (actual_text_start == std::string::npos) {
+			continue;
+		}
+
+		first_word.remove_prefix(actual_text_start);
+
+		//if (!encoding.count((std::string)first_word)) continue;
 
 		auto base = encoding.find(std::string(first_word));
 		if (base == encoding.end()) continue;
@@ -55,6 +68,8 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 				if (++it == words_view.end()) continue;
 				auto imm_range = *it;
 				std::string_view imm_str(imm_range.begin(), imm_range.end());
+
+				std::cout << (std::string)rd_str << " " << (std::string) rs_str << " " << (std::string)imm_str << "\n";
 
 				int immediate_value = 0;
 				auto [ptr, ec] = std::from_chars(imm_str.data(), imm_str.data() + imm_str.size(), immediate_value);
@@ -305,6 +320,8 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 				{
 					immediate_value = symbol_table[(std::string)imm_str] - curr_PC;
 				}
+
+
 				auto rd_it = register_to_number.find(std::string(rd_str));
 
 				if (rd_it == register_to_number.end()) {
@@ -342,6 +359,45 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 }
 
 void Assembler::first_pass() {
+	//loop vairables have to be in their own thing, i.e. 
+
+	
+
+	uint32_t pc = 0;
+
+	for (const std::string& line : text) {
+		if (line.empty() || line.front() == '#') {
+			continue;
+		}
+		if (size_t colon = line.find(':'); colon != std::string_view::npos) {
+			std::string label_name = line.substr(0, colon);
+			std::cout << label_name << " " << pc << "\n";
+			symbol_table[label_name] = pc;
+			continue;
+		}
+		pc += 4;
+	}
+
+
+	/*
+	for (auto it = current.begin(); it != current.end(); ++it) {
+		std::string_view line((*it).data, (*it).size());
+
+		size_t start = line.find_first_not_of(" \t");
+		if (start == std::string_view::npos || line[start] == '#') continue;
+		line.remove_prefix(start);
+
+		//finds colon and assigns it and then checks in the if statement if it exists.
+		if (size_t colon = line.find(':'); colon != std::string_view::npos) {
+			std::string_view label_name = line.substr(0, colon);
+			symbol_table[label_name] = pc;
+			continue;
+		}
+		pc += 4;
+	}
+
+	*/
+	/*
 	for (auto&& line_range : current | std::views::split('\n')) {
 
 		auto words_view = line_range | std::views::split(' ');
@@ -354,6 +410,8 @@ void Assembler::first_pass() {
 
 		if (first_word.empty()) continue;
 
+		if (first_word.front() == '#') continue;
+
 		if (encoding.count(std::string(first_word)))
 		{
 			curr_PC += 4;
@@ -365,7 +423,41 @@ void Assembler::first_pass() {
 			word = word.substr(0, word.size() - 1);
 		}
 
+		std::cout << word << " " << curr_PC << "\n";
+
 		symbol_table.insert({ word, curr_PC });
 		//curr_PC += 4;
+	}
+	*/
+}
+
+void Assembler::parse_into_vector() {
+
+	std::string_view text_view(current);
+
+	while (!text_view.empty()) {
+		size_t newline_pos = text_view.find('\n');
+		std::string_view line = (newline_pos == std::string_view::npos)
+			? text_view
+			: text_view.substr(0, newline_pos);
+
+		if (!line.empty() && line.back() == '\r') {
+			line.remove_suffix(1);
+		}
+
+		size_t first_real_char = line.find_first_not_of(" \t");
+		if (first_real_char != std::string_view::npos) {
+			line.remove_prefix(first_real_char);
+		}
+		else {
+			continue; // The line was entirely spaces, make it empty
+		}
+
+		text.emplace_back(line);
+
+		if (newline_pos == std::string_view::npos) {
+			break;
+		}
+		text_view.remove_prefix(newline_pos + 1);
 	}
 }

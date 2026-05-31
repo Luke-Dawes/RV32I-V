@@ -19,7 +19,7 @@
 class Assembler {
 
     std::string current;
-
+    std::vector<std::string> text;
     
 
 public:
@@ -36,6 +36,7 @@ public:
         current = t;
     }
 private:
+    void parse_into_vector();
     void first_pass();
     int curr_PC = 0;
     std::unordered_map<std::string, int> symbol_table;
