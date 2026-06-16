@@ -35,3 +35,5 @@ scheduler (need privilge modes?)
 system calls
 
 memory management
+
+performance manager? - i.e. tracks amount of instructions done, cache misses etc
