@@ -20,11 +20,18 @@ build a like interpreter which translates python or c++ or some sort of psuedoco
 
 ## left to do
 
-add pipelining with threading 
+add the M extension - multiplication
 
-probably rewrite the emulator with uint64_t for each thing in ram
+elf loader? and debugger - potentials
 
-write a memory allocator properly? - add paging or segmentation - this is more OS than cpu but dont have another good project where i can try it 
+add csr - (control and status registers - exceptions and interrupts)
 
-as this is an emulator for a processor - mainly affecting alu and pc etc, could you make manual control signals/a control unit and then make a whole pc?
+simple cache
 
+virtual memory
+
+scheduler (need privilge modes?)
+
+system calls
+
+memory management
