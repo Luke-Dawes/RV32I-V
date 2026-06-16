@@ -7,22 +7,23 @@
 #include <format>
 
 std::string_view get_next_token(const std::string& line, std::string::const_iterator& current_it) {
-	// Skip any consecutive spaces
+	//skip spaces before the word
 	while (current_it != line.end() && *current_it == ' ') {
 		++current_it;
 	}
 	if (current_it == line.end()) return {};
 
-	auto word_start = current_it;
-	// Find the end of this token
+	auto word_start = current_it; //explicitly a copy, important
+
+	//find the end of this token
 	while (current_it != line.end() && *current_it != ' ') {
 		++current_it;
 	}
 
-	// Create a view from the two iterator positions
+	//create a view from the two iterator positions
 	std::string_view word(&*word_start, std::distance(word_start, current_it));
 
-	// Drop the trailing comma if it exists
+	//get rid of trailing commars as they are common 
 	if (!word.empty() && word.back() == ',') {
 		word.remove_suffix(1);
 	}
@@ -40,15 +41,18 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 	//find each part split by "\n"
 	std::vector<uint32_t> final_code;
 
-	for (const std::string& line : text) {
+	for (const std::string& line : text) { //loop through the vector 
 
-		if (line.empty() || line.front() == '#') {
+		if (line.empty() || line.front() == '#') { //check for comments and skip if they are
 			continue;
 		}
+		//find spaces
 		auto current_it = std::find(line.begin(), line.end(), ' ');
 
+		//create the string view
 		std::string_view first_word(line.begin(), current_it);
 
+		//compare it to the map
 		auto base = encoding.find(std::string(first_word));
 		if (base == encoding.end()) continue;
 
@@ -58,14 +62,15 @@ std::vector<uint32_t> Assembler::parse() { //this needs a symbol table for like 
 		switch (type) {
 
 			case Format::I_TYPE: {
+				//get the rd, rs and imm as they should be three things long
 				std::string_view rd_str = get_next_token(line, current_it);
 				if (rd_str.empty()) continue;
 
-				// 2. Extract rs
+				
 				std::string_view rs_str = get_next_token(line, current_it);
 				if (rs_str.empty()) continue;
 
-				// 3. Extract imm
+				
 				std::string_view imm_str = get_next_token(line, current_it);
 				if (imm_str.empty()) continue;
 
