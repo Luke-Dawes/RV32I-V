@@ -16,7 +16,7 @@ https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.
 
 build this, with the base 40 instructions - done
 
-build a like interpreter which translates python or c++ or some sort of psuedocode to these instructions. - done
+build a like interpreter which translates RISC-V assembly into binary codes - done
 
 ## left to do
 
