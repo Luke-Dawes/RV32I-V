@@ -27,7 +27,7 @@
     <ClCompile Include="src\Instructions\S-type\S-Instructions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Testing\Testing.cpp">
+    <ClCompile Include="src\Testing\TestingCPU.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\CPU\Memory.cpp">
@@ -40,6 +40,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\assembler\Assembler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Testing\TestingInstructions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Testing\TestingAssembler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

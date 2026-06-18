@@ -1,9 +1,12 @@
 #pragma once
 
 class CPU;
+class Assembler;
 
 // ------------- Main func ------------------------------
-void run_tests(CPU& cpu);
+void run_cpu_tests(CPU& cpu);
+void run_instruction_tests(CPU& cpu);
+void run_assembler_tests(CPU& cpu);
 
 
 // ------------- R-Type Tests ------------------------------
@@ -65,3 +68,16 @@ void test_program_execution(CPU& cpu);
 void test_fibonacci_real_rv32i(CPU& cpu);
 void test_add_five_with_branch_rv32i(CPU& cpu);
 void test_add_five_without_branch_rv32i(CPU& cpu);
+
+void test_r_type(Assembler& assembler);
+void test_i_type(Assembler& assembler);
+void test_s_type(Assembler& assembler);
+void test_b_type(Assembler& assembler);
+void test_u_type(Assembler& assembler);
+void test_j_type(Assembler& assembler);
+
+void test_forward_jal(Assembler& assembler);
+void test_backward_branch(Assembler& assembler);
+
+void test_small_main_program(Assembler& assembler);
+void test_big_main_program(Assembler& assembler);

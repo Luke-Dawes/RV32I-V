@@ -25,6 +25,10 @@ class Assembler {
 public:
 
     std::vector<uint32_t> parse();
+    std::vector<uint32_t> parse(std::string t) {
+        update_string(t);
+        return parse();
+    }
 
     Assembler() = default;
 
@@ -49,6 +53,7 @@ enum class Format {
     B_TYPE,
     U_TYPE,
     J_TYPE,
+    IS_TYPE,
     SYSTEM // For ecall/ebreak which have fixed configurations
 };
 
@@ -83,7 +88,7 @@ const std::unordered_map<std::string, EncodingInfo> encoding = {
 
     // === Control Transfer Instructions ===
     {"jal",   {0x0000006F, Format::J_TYPE}},
-    {"jalr",  {0x00000067, Format::I_TYPE}},
+    {"jalr",  {0x00000067, Format::IS_TYPE}},
     {"beq",   {0x00000063, Format::B_TYPE}},
     {"bne",   {0x00001063, Format::B_TYPE}},
     {"blt",   {0x00004063, Format::B_TYPE}},
@@ -96,11 +101,11 @@ const std::unordered_map<std::string, EncodingInfo> encoding = {
     {"auipc", {0x00000017, Format::U_TYPE}},
 
     // === Load Instructions (I-Type) ===
-    {"lb",    {0x00000003, Format::I_TYPE}},
-    {"lh",    {0x00001003, Format::I_TYPE}},
-    {"lw",    {0x00002003, Format::I_TYPE}},
-    {"lbu",   {0x00004003, Format::I_TYPE}},
-    {"lhu",   {0x00005003, Format::I_TYPE}},
+    {"lb",    {0x00000003, Format::IS_TYPE}},
+    {"lh",    {0x00001003, Format::IS_TYPE}},
+    {"lw",    {0x00002003, Format::IS_TYPE}},
+    {"lbu",   {0x00004003, Format::IS_TYPE}},
+    {"lhu",   {0x00005003, Format::IS_TYPE}},
 
     // === Store Instructions (S-Type) ===
     {"sb",    {0x00000023, Format::S_TYPE}},

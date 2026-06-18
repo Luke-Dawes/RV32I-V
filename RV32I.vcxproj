@@ -132,7 +132,9 @@
     <ClCompile Include="src\Instructions\R-type\R-Instructions.cpp" />
     <ClCompile Include="src\Instructions\S-type\S-Instructions.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Testing\Testing.cpp" />
+    <ClCompile Include="src\Testing\TestingAssembler.cpp" />
+    <ClCompile Include="src\Testing\TestingCPU.cpp" />
+    <ClCompile Include="src\Testing\TestingInstructions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\assembler\Assembler.h" />
