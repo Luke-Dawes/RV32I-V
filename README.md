@@ -10,6 +10,8 @@ https://dejazzer.com/coen2710/lectures/RISC-V-Reference-Data-Green-Card.pdf - ch
 
 https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.pdf - another cheat sheet
 
+https://docs.riscv.org/reference/isa/v20260120/unpriv/m-st-ext.html m extention
+
 
 
 # long term aim
