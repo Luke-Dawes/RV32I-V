@@ -46,3 +46,5 @@ typedef void (*InstructionFunc)(CPU& cpu, Decoded_instruction& ins);
 
 extern InstructionFunc Instructions[];
 inline std::unordered_map<uint32_t, std::string> instruction_debug_table;
+
+constexpr uint32_t make_key(uint32_t funct7, uint32_t funct3, uint32_t opcode);

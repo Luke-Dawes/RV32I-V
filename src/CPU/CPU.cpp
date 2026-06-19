@@ -38,11 +38,9 @@ Decoded_instruction CPU::decode(uint32_t ins) {
 
 void CPU::execute(Decoded_instruction d) {
 
-#define IDX(b30, f3, op) ((b30) | (((f3) & 0x7) << 7) | ((op) & 0x7F))
-
 	std::cout << "PC = " << std::hex << PC << std::endl;
 
-	uint32_t key = IDX(d.b30, d.funct3, d.opcode);
+	uint32_t key = make_key(d.funct7, d.funct3, d.opcode);
 
 	std::cout << std::hex
 		<< "key=" << key

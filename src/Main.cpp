@@ -7,8 +7,8 @@
 int main() {
 	CPU cpu;
 	init_RAM();
-	//run_cpu_tests(cpu);
-    //run_instruction_tests(cpu);
+	run_cpu_tests(cpu);
+    run_instruction_tests(cpu);
 	run_assembler_tests(cpu);
 
 	return 1;

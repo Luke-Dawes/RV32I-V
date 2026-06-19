@@ -122,118 +122,153 @@ Decoded_instruction decode_ins(uint32_t ins) {
     return d;
 }
 
+constexpr uint32_t make_key(uint32_t funct7, uint32_t funct3, uint32_t opcode)
+{
+    uint32_t cls = 0;
+
+    if (funct7 == 0x20)
+        cls = 1;       // SUB/SRA
+    else if (funct7 == 0x01)
+        cls = 2;       // M extension
+
+    return ((cls & 0x3) << 10) |
+        ((funct3 & 0x7) << 7) |
+        (opcode & 0x7F);
+}
 
 
+InstructionFunc Instructions[4096] = { nullptr }; 
 
-#define IDX(b30, f3, op) ((((b30) & 0x1) << 10) | (((f3) & 0x7) << 7) | ((op) & 0x7F))
-
-InstructionFunc Instructions[2048] = { nullptr };
 
 void init_table() {
-    Instructions[IDX(0, 0, 0x03)] = lb;
-    Instructions[IDX(0, 1, 0x03)] = lh;
-    Instructions[IDX(0, 2, 0x03)] = lw;
-    Instructions[IDX(0, 4, 0x03)] = lbu;
-    Instructions[IDX(0, 5, 0x03)] = lhu;
+    Instructions[make_key(0, 0, 0x03)] = lb;
+    Instructions[make_key(0, 1, 0x03)] = lh;
+    Instructions[make_key(0, 2, 0x03)] = lw;
+    Instructions[make_key(0, 4, 0x03)] = lbu;
+    Instructions[make_key(0, 5, 0x03)] = lhu;
 
     // --- STORE (Opcode 0x23) ---
-    Instructions[IDX(0, 0, 0x23)] = sb;
-    Instructions[IDX(0, 1, 0x23)] = sh;
-    Instructions[IDX(0, 2, 0x23)] = sw;
+    Instructions[make_key(0, 0, 0x23)] = sb;
+    Instructions[make_key(0, 1, 0x23)] = sh;
+    Instructions[make_key(0, 2, 0x23)] = sw;
 
     // --- INTEGER REG-IMM (Opcode 0x13) ---
-    Instructions[IDX(0, 0, 0x13)] = addi;
-    Instructions[IDX(0, 2, 0x13)] = slti;
-    Instructions[IDX(0, 3, 0x13)] = sltiu;
-    Instructions[IDX(0, 4, 0x13)] = xori;
-    Instructions[IDX(0, 6, 0x13)] = ori;
-    Instructions[IDX(0, 7, 0x13)] = andi;
-    Instructions[IDX(0, 1, 0x13)] = slli;
-    Instructions[IDX(0, 5, 0x13)] = srli;
-    Instructions[IDX(1, 5, 0x13)] = srai;
+    Instructions[make_key(0, 0, 0x13)] = addi;
+    Instructions[make_key(0, 2, 0x13)] = slti;
+    Instructions[make_key(0, 3, 0x13)] = sltiu;
+    Instructions[make_key(0, 4, 0x13)] = xori;
+    Instructions[make_key(0, 6, 0x13)] = ori;
+    Instructions[make_key(0, 7, 0x13)] = andi;
+    Instructions[make_key(0, 1, 0x13)] = slli;
+    Instructions[make_key(0, 5, 0x13)] = srli;
+    Instructions[make_key(0x20, 5, 0x13)] = srai;
+
 
     // --- INTEGER REG-REG (Opcode 0x33) ---
-    Instructions[IDX(0, 0, 0x33)] = add;
-    Instructions[IDX(1, 0, 0x33)] = sub;
-    Instructions[IDX(0, 1, 0x33)] = sll;
-    Instructions[IDX(0, 2, 0x33)] = slt;
-    Instructions[IDX(0, 3, 0x33)] = sltu;
-    Instructions[IDX(0, 4, 0x33)] = _xor;
-    Instructions[IDX(0, 5, 0x33)] = srl;
-    Instructions[IDX(1, 5, 0x33)] = sra;
-    Instructions[IDX(0, 6, 0x33)] = _or;
-    Instructions[IDX(0, 7, 0x33)] = _and;
+    Instructions[make_key(0x00, 0, 0x33)] = add;
+    Instructions[make_key(0x20, 0, 0x33)] = sub;
+    Instructions[make_key(0x00, 5, 0x33)] = srl;
+    Instructions[make_key(0x20, 5, 0x33)] = sra;
+    Instructions[make_key(0x00, 1, 0x33)] = sll;
+    Instructions[make_key(0x00, 2, 0x33)] = slt;
+    Instructions[make_key(0x00, 3, 0x33)] = sltu;
+    Instructions[make_key(0x00, 4, 0x33)] = _xor;
+    Instructions[make_key(0x00, 6, 0x33)] = _or;
+    Instructions[make_key(0x00, 7, 0x33)] = _and;
 
     // --- BRANCH (Opcode 0x63) ---
-    Instructions[IDX(0, 0, 0x63)] = beq;
-    Instructions[IDX(0, 1, 0x63)] = bne;
-    Instructions[IDX(0, 4, 0x63)] = blt;
-    Instructions[IDX(0, 5, 0x63)] = bge;
-    Instructions[IDX(0, 6, 0x63)] = bltu;
-    Instructions[IDX(0, 7, 0x63)] = bgeu;
+    Instructions[make_key(0, 0, 0x63)] = beq;
+    Instructions[make_key(0, 1, 0x63)] = bne;
+    Instructions[make_key(0, 4, 0x63)] = blt;
+    Instructions[make_key(0, 5, 0x63)] = bge;
+    Instructions[make_key(0, 6, 0x63)] = bltu;
+    Instructions[make_key(0, 7, 0x63)] = bgeu;
 
     // --- JUMP & UPPER IMM (Various Opcodes) ---
-    Instructions[IDX(0, 0, 0x6F)] = jal;   // Opcode 0x6F
-    Instructions[IDX(0, 0, 0x67)] = jalr;  // Opcode 0x67 (funct3=0)
-    Instructions[IDX(0, 0, 0x37)] = lui;   // Opcode 0x37
-    Instructions[IDX(0, 0, 0x17)] = auipc; // Opcode 0x17
+    Instructions[make_key(0, 0, 0x6F)] = jal;   // Opcode 0x6F
+    Instructions[make_key(0, 0, 0x67)] = jalr;  // Opcode 0x67 (funct3=0)
+    Instructions[make_key(0, 0, 0x37)] = lui;   // Opcode 0x37
+    Instructions[make_key(0, 0, 0x17)] = auipc; // Opcode 0x17
 
     // --- SYSTEM (Opcode 0x73) ---
-    Instructions[IDX(0, 0, 0x73)] = ecall; // Handles ECALL/EBREAK
+    Instructions[make_key(0, 0, 0x73)] = ecall; // Handles ECALL/EBREAK
+
+    Instructions[make_key(0x01, 0, 0x33)] = mul;
+    Instructions[make_key(0x01, 1, 0x33)] = mulh;
+    Instructions[make_key(0x01, 2, 0x33)] = mulhsu;
+    Instructions[make_key(0x01, 3, 0x33)] = mulhu;
+    Instructions[make_key(0x01, 4, 0x33)] = div;
+    Instructions[make_key(0x01, 5, 0x33)] = divu;
+    Instructions[make_key(0x01, 6, 0x33)] = rem;
+    Instructions[make_key(0x01, 7, 0x33)] = remu;
 
 
-        instruction_debug_table = {
+    instruction_debug_table = {
         // --- LOAD (Opcode 0x03) ---
-        { IDX(0, 0, 0x03), "lb" },
-        { IDX(0, 1, 0x03), "lh" },
-        { IDX(0, 2, 0x03), "lw" },
-        { IDX(0, 4, 0x03), "lbu" },
-        { IDX(0, 5, 0x03), "lhu" },
+        { make_key(0x00, 0, 0x03), "lb" },
+        { make_key(0x00, 1, 0x03), "lh" },
+        { make_key(0x00, 2, 0x03), "lw" },
+        { make_key(0x00, 4, 0x03), "lbu" },
+        { make_key(0x00, 5, 0x03), "lhu" },
 
         // --- STORE (Opcode 0x23) ---
-        { IDX(0, 0, 0x23), "sb" },
-        { IDX(0, 1, 0x23), "sh" },
-        { IDX(0, 2, 0x23), "sw" },
+        { make_key(0x00, 0, 0x23), "sb" },
+        { make_key(0x00, 1, 0x23), "sh" },
+        { make_key(0x00, 2, 0x23), "sw" },
 
         // --- INTEGER REG-IMM (Opcode 0x13) ---
-        { IDX(0, 0, 0x13), "addi" },
-        { IDX(0, 2, 0x13), "slti" },
-        { IDX(0, 3, 0x13), "sltiu" },
-        { IDX(0, 4, 0x13), "xori" },
-        { IDX(0, 6, 0x13), "ori" },
-        { IDX(0, 7, 0x13), "andi" },
-        { IDX(0, 1, 0x13), "slli" },
-        { IDX(0, 5, 0x13), "srli" },
-        { IDX(1, 5, 0x13), "srai" },
+        { make_key(0x00, 0, 0x13), "addi" },
+        { make_key(0x00, 2, 0x13), "slti" },
+        { make_key(0x00, 3, 0x13), "sltiu" },
+        { make_key(0x00, 4, 0x13), "xori" },
+        { make_key(0x00, 6, 0x13), "ori" },
+        { make_key(0x00, 7, 0x13), "andi" },
+
+        { make_key(0x00, 1, 0x13), "slli" },
+        { make_key(0x00, 5, 0x13), "srli" },
+        { make_key(0x20, 5, 0x13), "srai" },
 
         // --- INTEGER REG-REG (Opcode 0x33) ---
-        { IDX(0, 0, 0x33), "add" },
-        { IDX(1, 0, 0x33), "sub" },
-        { IDX(0, 1, 0x33), "sll" },
-        { IDX(0, 2, 0x33), "slt" },
-        { IDX(0, 3, 0x33), "sltu" },
-        { IDX(0, 4, 0x33), "xor" },
-        { IDX(0, 5, 0x33), "srl" },
-        { IDX(1, 5, 0x33), "sra" },
-        { IDX(0, 6, 0x33), "or" },
-        { IDX(0, 7, 0x33), "and" },
+        { make_key(0x00, 0, 0x33), "add" },
+        { make_key(0x20, 0, 0x33), "sub" },
+
+        { make_key(0x00, 1, 0x33), "sll" },
+        { make_key(0x00, 2, 0x33), "slt" },
+        { make_key(0x00, 3, 0x33), "sltu" },
+        { make_key(0x00, 4, 0x33), "xor" },
+
+        { make_key(0x00, 5, 0x33), "srl" },
+        { make_key(0x20, 5, 0x33), "sra" },
+
+        { make_key(0x00, 6, 0x33), "or" },
+        { make_key(0x00, 7, 0x33), "and" },
+
+        // --- M EXTENSION (Opcode 0x33, funct7 = 0x01) ---
+        { make_key(0x01, 0, 0x33), "mul" },
+        { make_key(0x01, 1, 0x33), "mulh" },
+        { make_key(0x01, 2, 0x33), "mulhsu" },
+        { make_key(0x01, 3, 0x33), "mulhu" },
+        { make_key(0x01, 4, 0x33), "div" },
+        { make_key(0x01, 5, 0x33), "divu" },
+        { make_key(0x01, 6, 0x33), "rem" },
+        { make_key(0x01, 7, 0x33), "remu" },
 
         // --- BRANCH (Opcode 0x63) ---
-        { IDX(0, 0, 0x63), "beq" },
-        { IDX(0, 1, 0x63), "bne" },
-        { IDX(0, 4, 0x63), "blt" },
-        { IDX(0, 5, 0x63), "bge" },
-        { IDX(0, 6, 0x63), "bltu" },
-        { IDX(0, 7, 0x63), "bgeu" },
+        { make_key(0x00, 0, 0x63), "beq" },
+        { make_key(0x00, 1, 0x63), "bne" },
+        { make_key(0x00, 4, 0x63), "blt" },
+        { make_key(0x00, 5, 0x63), "bge" },
+        { make_key(0x00, 6, 0x63), "bltu" },
+        { make_key(0x00, 7, 0x63), "bgeu" },
 
-        // --- JUMP & UPPER IMM (Various Opcodes) ---
-        { IDX(0, 0, 0x6F), "jal" },
-        { IDX(0, 0, 0x67), "jalr" },
-        { IDX(0, 0, 0x37), "lui" },
-        { IDX(0, 0, 0x17), "auipc" },
+        // --- JUMP & UPPER IMM ---
+        { make_key(0x00, 0, 0x6F), "jal" },
+        { make_key(0x00, 0, 0x67), "jalr" },
+        { make_key(0x00, 0, 0x37), "lui" },
+        { make_key(0x00, 0, 0x17), "auipc" },
 
-        // --- SYSTEM (Opcode 0x73) ---
-        { IDX(0, 0, 0x73), "ecall" }
+        // --- SYSTEM ---
+        { make_key(0x00, 0, 0x73), "ecall" }
     };
 }
 

@@ -17,6 +17,7 @@ void sltu(CPU& cpu, Decoded_instruction& ins);
 
 void mul(CPU& cpu, Decoded_instruction& ins);
 void mulh(CPU& cpu, Decoded_instruction& ins);
+void mulhsu(CPU& cpu, Decoded_instruction& ins);
 void mulhu(CPU& cpu, Decoded_instruction& ins);
 void div(CPU& cpu, Decoded_instruction& ins);
 void divu(CPU& cpu, Decoded_instruction& ins);
