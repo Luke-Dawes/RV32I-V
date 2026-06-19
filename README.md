@@ -34,8 +34,6 @@ virtual memory
 
 scheduler (need privilge modes?)
 
-restructure files - i.e. testing should be outside src - there should be multiple cpp files for the single testing header file which are named like testing_cpu, testing_instructions etc, instructions in CPU, memory in its own folder 
-
 system calls
 
 memory management
