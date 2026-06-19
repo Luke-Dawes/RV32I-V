@@ -22,7 +22,7 @@ build a like interpreter which translates RISC-V assembly into binary codes - do
 
 ## left to do
 
-add the M extension - multiplication - currently working on 
+add the M extension - multiplication - currently working on, just need to create testing for it
 
 elf loader? and debugger - potentials
 
