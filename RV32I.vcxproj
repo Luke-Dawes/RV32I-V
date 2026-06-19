@@ -126,26 +126,26 @@
   <ItemGroup>
     <ClCompile Include="src\assembler\Assembler.cpp" />
     <ClCompile Include="src\CPU\CPU.cpp" />
-    <ClCompile Include="src\CPU\Memory.cpp" />
-    <ClCompile Include="src\Instructions\B, U, J-type\B,U,J-instructions.cpp" />
-    <ClCompile Include="src\Instructions\I-type\I-Instructions.cpp" />
-    <ClCompile Include="src\Instructions\R-type\R-Instructions.cpp" />
-    <ClCompile Include="src\Instructions\S-type\S-Instructions.cpp" />
+    <ClCompile Include="src\Memory\Memory.cpp" />
+    <ClCompile Include="src\CPU\Instructions\B,U,J-type\B,U,J-instructions.cpp" />
+    <ClCompile Include="src\CPU\Instructions\I-type\I-Instructions.cpp" />
+    <ClCompile Include="src\CPU\Instructions\R-type\R-Instructions.cpp" />
+    <ClCompile Include="src\CPU\Instructions\S-type\S-Instructions.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Testing\TestingAssembler.cpp" />
-    <ClCompile Include="src\Testing\TestingCPU.cpp" />
-    <ClCompile Include="src\Testing\TestingInstructions.cpp" />
+    <ClCompile Include="Testing\TestingAssembler.cpp" />
+    <ClCompile Include="Testing\TestingCPU.cpp" />
+    <ClCompile Include="Testing\TestingInstructions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\assembler\Assembler.h" />
     <ClInclude Include="src\CPU\CPU.h" />
-    <ClInclude Include="src\Instructions\B, U, J-type\B,J,U-instructions.h" />
-    <ClInclude Include="src\Instructions\I-type\I-Instructions.h" />
+    <ClInclude Include="src\CPU\Instructions\B,U,J-type\B,J,U-instructions.h" />
+    <ClInclude Include="src\CPU\Instructions\I-type\I-Instructions.h" />
     <ClInclude Include="src\Instructions\Instructions.h" />
-    <ClInclude Include="src\CPU\Memory.h" />
-    <ClInclude Include="src\Instructions\R-type\R-Instructions.h" />
-    <ClInclude Include="src\Instructions\S-type\S-Instructions.h" />
-    <ClInclude Include="src\Testing\Testing.h" />
+    <ClInclude Include="src\Memory\Memory.h" />
+    <ClInclude Include="src\CPU\Instructions\R-type\R-Instructions.h" />
+    <ClInclude Include="src\CPU\Instructions\S-type\S-Instructions.h" />
+    <ClInclude Include="Testing\Testing.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

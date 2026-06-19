@@ -1,8 +1,8 @@
 #include "Memory.h"
-#include "../Instructions/R-type/R-Instructions.h"
-#include "../Instructions/I-type/I-Instructions.h"
-#include "../Instructions/S-type/S-Instructions.h"
-#include "../Instructions/B, U, J-type/B,J,U-instructions.h"
+#include "../CPU/Instructions/R-type/R-Instructions.h"
+#include "../CPU/Instructions/I-type/I-Instructions.h"
+#include "../CPU/Instructions/S-type/S-Instructions.h"
+#include "../CPU/Instructions/B,U,J-type/B,J,U-instructions.h"
 
 uint8_t RAM[0x100];
 

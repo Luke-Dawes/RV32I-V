@@ -1,6 +1,6 @@
 #include "S-Instructions.h"
-#include "../../CPU/CPU.h"
-#include "../../CPU/Memory.h"
+#include "../../CPU.h"
+#include "../../../Memory/Memory.h"
 
 
 void sb(CPU& cpu, Decoded_instruction& ins) {

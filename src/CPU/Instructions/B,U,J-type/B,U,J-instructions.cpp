@@ -1,6 +1,6 @@
 #include "B,J,U-instructions.h"
-#include "../../CPU/CPU.h"
-#include "../../CPU/Memory.h"
+#include "../../CPU.h"
+#include "../../../Memory/Memory.h"
 #include <iostream>
 
 

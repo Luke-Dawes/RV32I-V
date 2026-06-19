@@ -1,6 +1,6 @@
 #include "R-Instructions.h"
-#include "../../CPU/CPU.h"
-#include "../../CPU/Memory.h"
+#include "../../CPU.h"
+#include "../../../Memory/Memory.h"
 
 void add(CPU& cpu, Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] + cpu.registers[ins.rs2];

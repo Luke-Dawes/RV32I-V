@@ -2,7 +2,7 @@
 
 #include <cassert>
 #include <iostream>
-#include "../Assembler/Assembler.h"
+#include "../src/Assembler/Assembler.h"
 
 void run_assembler_tests(CPU& cpu)
 {

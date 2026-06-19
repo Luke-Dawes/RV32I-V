@@ -1,6 +1,6 @@
 #include "I-Instructions.h"
-#include "../../CPU/CPU.h"
-#include "../../CPU/Memory.h"
+#include "../../CPU.h"
+#include "../../../Memory/Memory.h"
 
 /*inline int32_t sixteen_to_thirtytwo(uint16_t ins.imm) {
 	return (static_cast<int32_t>(ins.imm) << 20) >> 20;

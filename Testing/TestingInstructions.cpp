@@ -1,12 +1,12 @@
 #include "Testing.h"
-#include "../Instructions/R-type/R-Instructions.h"
-#include "../Instructions/S-type/S-Instructions.h"
-#include "../Instructions/I-type/I-Instructions.h"
-#include "../Instructions/B, U, J-type/B,J,U-instructions.h"
+#include "../src/CPU/Instructions/B,U,J-type/B,J,U-instructions.h"
+#include "../src/CPU/Instructions/I-type/I-Instructions.h"
+#include "../src/CPU/Instructions/R-type/R-Instructions.h"
+#include "../src/CPU/Instructions/S-type/S-Instructions.h"
 #include <cassert>
 #include <cstring>
-#include "../CPU/Memory.h"
-#include "../CPU/CPU.h"
+#include "../src/Memory/Memory.h"
+#include "../src/CPU/CPU.h"
 #include <string>
 #include <iostream>
 

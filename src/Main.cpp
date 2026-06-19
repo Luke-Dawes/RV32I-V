@@ -1,5 +1,5 @@
-#include "../src/Testing/Testing.h"
-#include "../src/CPU/Memory.h"
+#include "../Testing/Testing.h"
+#include "../src/Memory/Memory.h"
 #include "../src/CPU/CPU.h"
 #include "../src/assembler/Assembler.h"
 

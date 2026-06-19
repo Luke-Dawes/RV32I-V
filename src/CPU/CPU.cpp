@@ -1,5 +1,5 @@
 #include "CPU.h"
-#include "Memory.h"
+#include "../Memory/Memory.h"
 #include <iostream>
 
 CPU::CPU() {
