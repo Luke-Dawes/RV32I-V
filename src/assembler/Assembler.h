@@ -86,6 +86,17 @@ const std::unordered_map<std::string, EncodingInfo> encoding = {
     {"or",    {0x00006033, Format::R_TYPE}},
     {"and",   {0x00007033, Format::R_TYPE}},
 
+    // === Multiply Extension (RV32M) - Register-Register (R-Type) ===
+    {"mul",    {0x02000033, Format::R_TYPE}},
+    {"mulh",   {0x02001033, Format::R_TYPE}},
+    {"mulhsu", {0x02002033, Format::R_TYPE}},
+    {"mulhu",  {0x02003033, Format::R_TYPE}},
+
+    {"div",    {0x02004033, Format::R_TYPE}},
+    {"divu",   {0x02005033, Format::R_TYPE}},
+    {"rem",    {0x02006033, Format::R_TYPE}},
+    {"remu",   {0x02007033, Format::R_TYPE}},
+
     // === Control Transfer Instructions ===
     {"jal",   {0x0000006F, Format::J_TYPE}},
     {"jalr",  {0x00000067, Format::IS_TYPE}},
