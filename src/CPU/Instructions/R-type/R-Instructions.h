@@ -14,3 +14,11 @@ void srl(CPU& cpu, Decoded_instruction& ins);
 void sra(CPU& cpu, Decoded_instruction& ins);
 void slt(CPU& cpu, Decoded_instruction& ins);
 void sltu(CPU& cpu, Decoded_instruction& ins);
+
+void mul(CPU& cpu, Decoded_instruction& ins);
+void mulh(CPU& cpu, Decoded_instruction& ins);
+void mulhu(CPU& cpu, Decoded_instruction& ins);
+void div(CPU& cpu, Decoded_instruction& ins);
+void divu(CPU& cpu, Decoded_instruction& ins);
+void rem(CPU& cpu, Decoded_instruction& ins);
+void remu(CPU& cpu, Decoded_instruction& ins);
