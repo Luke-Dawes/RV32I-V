@@ -48,6 +48,9 @@
     <ClCompile Include="Testing\TestingAssembler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Elf_loader\Loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Instructions\Instructions.h">
@@ -75,6 +78,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\assembler\Assembler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Elf_loader\Loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

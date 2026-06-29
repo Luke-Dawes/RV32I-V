@@ -12,6 +12,8 @@ https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.
 
 https://docs.riscv.org/reference/isa/v20260120/unpriv/m-st-ext.html m extention
 
+https://gist.github.com/x0nu11byt3/bcb35c3de461e5fb66173071a2379779 elf loader
+
 
 
 # long term aim
@@ -20,17 +22,17 @@ build this, with the base 40 instructions - done
 
 build a like interpreter which translates RISC-V assembly into binary codes - done
 
+add the M extension - multiplication - testing not done however
+
 ## left to do
 
-add the M extension - multiplication - currently working on, just need to create testing for it
+elf loader? and debugger - potentials / stack memory etc
 
-elf loader? and debugger - potentials
-
-add csr - (control and status registers - exceptions and interrupts)
+add csr - (control and status registers - exceptions and interrupts
 
 simple cache
 
-virtual memory
+virtual memory - sv48/sv57
 
 scheduler (need privilge modes?)
 

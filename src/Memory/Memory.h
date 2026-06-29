@@ -10,7 +10,7 @@ using std::uint32_t;
 
 //little edian memory 
 extern uint8_t RAM[];
-
+constexpr uint32_t RAM_BASE = 0x80000000;
 
 
 

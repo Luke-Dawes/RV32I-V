@@ -4,7 +4,7 @@
 #include "../CPU/Instructions/S-type/S-Instructions.h"
 #include "../CPU/Instructions/B,U,J-type/B,J,U-instructions.h"
 
-uint8_t RAM[0x100];
+uint8_t RAM[128 * 1024 * 1024]; //128 MB
 
 //constexpr auto out_of_bounds = 0x1;
 //constexpr auto miss_aligned_trap = 0x2;
