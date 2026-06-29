@@ -41,3 +41,101 @@ system calls
 memory management
 
 performance manager? - i.e. tracks amount of instructions done, cache misses etc
+
+
+
+
+## maybe a better plan from ai? 
+make the kernal compile into an elf file, and then have my emulator run that elf file.
+
+### Project 1 - RISC-V Emulator (C++)
+#### CPU
+✅ Implement RV32I base ISA
+✅ Build assembler
+✅ Encode assembly into machine code
+⏳ Finish testing M extension (multiply/divide)
+Program Loading
+Implement ELF loader
+Load program segments into RAM
+Initialise program counter (PC)
+Initialise stack pointer (SP)
+Support symbols for debugging
+#### Debugger
+Single step
+Continue
+Breakpoints
+Register viewer
+Memory viewer
+#### Disassembler
+Symbol lookup
+Privileged Architecture
+#### Implement CSR registers
+Implement privilege modes (Machine, Supervisor, User)
+Implement exceptions
+Implement interrupts
+Timer interrupt
+#### Memory System
+Physical RAM
+Memory-mapped devices
+MMU
+Sv39 virtual memory
+TLB (optional)
+Hardware Devices
+UART (console output)
+Timer
+(Optional) Disk device
+(Optional) Simple GPU/framebuffer
+#### Performance
+Cache simulator
+Instruction counter
+Cycle counter
+Cache statistics
+Branch statistics
+Performance report
+
+
+### Project 2 - Mini Kernel (C)
+Boot
+Boot assembly (boot.S)
+Initialise stack
+Jump to kernel_main()
+Console
+UART driver
+printf()
+Simple logging
+Trap Handling
+Trap handler
+Exception handling
+Interrupt handling
+Return from trap
+Memory Management
+Physical page allocator
+Kernel heap (kmalloc)
+Free memory
+Memory map
+Virtual Memory
+Create page tables
+Map kernel memory
+Enable paging
+User address spaces
+Processes
+Process Control Block (PCB)
+Create process
+Destroy process
+Process states
+Scheduler
+Timer-based scheduling
+Round-robin scheduler
+Context switching
+System Calls
+write
+read
+exit
+yield
+sleep
+Memory allocation
+User Programs
+Load ELF executables
+Start user process
+Switch to user mode
+Return to kernel on ecall
