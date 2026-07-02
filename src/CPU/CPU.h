@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 
+class Memory;
+
 //uint8_t RAM[];
 
 constexpr auto out_of_bounds = 0x1;
@@ -17,7 +19,7 @@ enum stage {
 
 class CPU {
 public:
-	CPU();
+	CPU(Memory& mem);
 
 	void tick();
 
@@ -28,7 +30,9 @@ public:
 	uint32_t CIR = 0;
 	//uint8_t* memory = &RAM[0]; //probably unused as RAM will be global
 
+	Memory& memory;
 private:
+
 	uint32_t fetch();
 	//decode is in the memory file 
 	Decoded_instruction decode(uint32_t ins);

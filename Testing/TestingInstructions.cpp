@@ -69,8 +69,7 @@ void test_sb(CPU& cpu)
 	sb(cpu, d); //register[rs1] + imm for the location, register[rs2] for data
 	//should store it at the 10th ram address
 
-	assert(RAM[10] == 6 && "loading 6 into ram addess 10 on test_sb failed");
-
+	assert(cpu.memory.read8(10) == 6 && "loading 6 into ram addess 10 on test_sb failed");
 }
 
 void test_sh(CPU& cpu) {
@@ -86,8 +85,8 @@ void test_sh(CPU& cpu) {
 
 	uint32_t addr = 20;
 
-	assert(RAM[addr] == 0x22 && "test_sh failed first byte");
-	assert(RAM[addr + 1] == 0x11 && "test_sh failed second byte");
+	assert(cpu.memory.read8(addr) == 0x22 && "test_sh failed first byte");
+	assert(cpu.memory.read8(addr + 1) == 0x11 && "test_sh failed second byte");
 }
 
 void test_sw(CPU& cpu) {
@@ -103,10 +102,10 @@ void test_sw(CPU& cpu) {
 
 	uint32_t addr = 20;
 
-	assert(RAM[addr] == 0x44 && "test_sh failed first byte");
-	assert(RAM[addr + 1] == 0x33 && "test_sh failed second byte");
-	assert(RAM[addr + 2] == 0x22 && "test_sh failed third byte");
-	assert(RAM[addr + 3] == 0x11 && "test_sh failed fourth byte");
+	assert(cpu.memory.read8(addr) == 0x44 && "test_sh failed first byte");
+	assert(cpu.memory.read8(addr + 1) == 0x33 && "test_sh failed second byte");
+	assert(cpu.memory.read8(addr + 2) == 0x22 && "test_sh failed third byte");
+	assert(cpu.memory.read8(addr + 3) == 0x11 && "test_sh failed fourth byte");
 }
 
 // ------------- R-type ----------------------------------
@@ -407,7 +406,7 @@ void test_srai(CPU& cpu) {
 
 void test_lb(CPU& cpu) {
 	cpu.registers[5] = 10;
-	RAM[12] = 0x85; // Negative byte value (1000 0101)
+	cpu.memory.write8(0x85, 12);
 
 	Decoded_instruction d;
 	d.rs1 = 5;
@@ -421,8 +420,8 @@ void test_lb(CPU& cpu) {
 
 void test_lh(CPU& cpu) {
 	cpu.registers[5] = 20;
-	RAM[20] = 0x00;
-	RAM[21] = 0x90; // High byte has sign bit active (Little Endian target 0x9000)
+	cpu.memory.write8(0x00, 20);
+	cpu.memory.write8(0x90, 21);
 
 	Decoded_instruction d;
 	d.rs1 = 5;
@@ -435,10 +434,10 @@ void test_lh(CPU& cpu) {
 
 void test_lw(CPU& cpu) {
 	cpu.registers[5] = 30;
-	RAM[34] = 0x44;
-	RAM[35] = 0x33;
-	RAM[36] = 0x22;
-	RAM[37] = 0x11; // Memory holds 0x11223344
+	cpu.memory.write8(0x44, 34);
+	cpu.memory.write8(0x33, 35);
+	cpu.memory.write8(0x22, 36);
+	cpu.memory.write8(0x11, 37);
 
 	Decoded_instruction d;
 	d.rs1 = 5;
@@ -451,7 +450,7 @@ void test_lw(CPU& cpu) {
 
 void test_lbu(CPU& cpu) {
 	cpu.registers[5] = 40;
-	RAM[40] = 0x85;
+	cpu.memory.write8(0x85, 40);
 
 	Decoded_instruction d;
 	d.rs1 = 5;
@@ -465,8 +464,8 @@ void test_lbu(CPU& cpu) {
 
 void test_lhu(CPU& cpu) {
 	cpu.registers[5] = 50;
-	RAM[50] = 0x22;
-	RAM[51] = 0xBB; // 0xBB22
+	cpu.memory.write8(0x22, 50);
+	cpu.memory.write8(0xBB, 51);
 
 	Decoded_instruction d;
 	d.rs1 = 5;

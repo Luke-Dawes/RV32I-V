@@ -46,38 +46,33 @@ void sltiu(CPU& cpu, Decoded_instruction& ins) { //unsigned
 
 void lb(CPU& cpu, Decoded_instruction& ins) {
 	if (ins.rd != 0) {
-		cpu.registers[ins.rd] = static_cast<int32_t>(static_cast<int8_t>(RAM[cpu.registers[ins.rs1] + ins.imm]));
+		cpu.registers[ins.rd] = static_cast<int32_t>(static_cast<int8_t>(cpu.memory.read8(cpu.registers[ins.rs1] + ins.imm)));
 	}
 }
 
 //signed
 void lh(CPU& cpu, Decoded_instruction& ins) {
 	if (ins.rd != 0) {
-		int32_t val = RAM[cpu.registers[ins.rs1] + ins.imm] | (RAM[cpu.registers[ins.rs1] + ins.imm + 1] << 8);
+		int32_t val = cpu.memory.read16(cpu.registers[ins.rs1] + ins.imm);
 		cpu.registers[ins.rd] = (val << 16) >> 16;
 	}
 }
 //signed
 void lw(CPU& cpu, Decoded_instruction& ins) {
 	if (ins.rd != 0) {
-		cpu.registers[ins.rd] = static_cast<int32_t>(
-			RAM[cpu.registers[ins.rs1] + ins.imm] |
-			(RAM[cpu.registers[ins.rs1] + ins.imm + 1] << 8) |
-			(RAM[cpu.registers[ins.rs1] + ins.imm + 2] << 16) |
-			(RAM[cpu.registers[ins.rs1] + ins.imm + 3] << 24)
-			);
+		cpu.registers[ins.rd] = static_cast<int32_t>(cpu.memory.read32(cpu.registers[ins.rs1] + ins.imm));
 	}
 }
 //unsigned
 void lbu(CPU& cpu, Decoded_instruction& ins) {
 	if (ins.rd != 0) {
-		cpu.registers[ins.rd] = static_cast<uint32_t>(RAM[cpu.registers[ins.rs1] + ins.imm]);
+		cpu.registers[ins.rd] = static_cast<uint32_t>(cpu.memory.read8(cpu.registers[ins.rs1] + ins.imm));
 	}
 }
 
 void lhu(CPU& cpu, Decoded_instruction& ins) {
 	if (ins.rd != 0) {
-		cpu.registers[ins.rd] = static_cast<uint32_t>(RAM[cpu.registers[ins.rs1] + ins.imm]) | (RAM[cpu.registers[ins.rs1] + ins.imm + 1] << 8);
+		cpu.registers[ins.rd] = static_cast<uint32_t>(cpu.memory.read16(cpu.registers[ins.rs1] + ins.imm));
 	}
 }
 

@@ -2,12 +2,13 @@
 #include <istream>
 #include <fstream>
 #include "../Memory/Memory.h"
+#include "../CPU/CPU.h"
 
 bool Elf_Loader::checkHeader() const {
-
+	return true;
 }
 
-void Elf_Loader::load(const std::string& path) {
+void Elf_Loader::load(CPU& cpu, const std::string& path) {
 
 	std::ifstream file (path, std::ios::binary); //open file as a binary file
 
@@ -31,9 +32,16 @@ void Elf_Loader::load(const std::string& path) {
 
 		file.seekg(ph.p_offset); //move to where the data is in the file
 
-		uint32_t ram_offset = ph.p_vaddr - RAM_BASE; //find where it should go in ram
+		uint32_t ram_offset = ph.p_vaddr - cpu.memory.RAM_BASE; //find where it should go in ram
 
-		file.read(reinterpret_cast<char*>(&RAM[ram_offset]), ph.p_filesz); //read the data straight into ram[offset]
+		file.read(reinterpret_cast<char*>(&cpu.memory.data()[ram_offset]), ph.p_filesz); //read the data straight into ram[offset]
 
+		if (ph.p_memsz > ph.p_filesz) { //if there needs to be memory which is initalised to 0
+			uint32_t bss_offset = ram_offset + ph.p_filesz; //where the .bss section starts in ram
+			uint32_t bss_size = ph.p_memsz - ph.p_filesz; //how many 0 to fill the .bss
+
+			std::fill_n(&cpu.memory.data()[bss_offset], bss_size, 0); //fill it 
+			
+		}
 	}
 }

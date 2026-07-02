@@ -5,8 +5,8 @@
 
 
 int main() {
-	CPU cpu;
-	init_RAM();
+	Memory mem;
+	CPU cpu(mem);
 	run_cpu_tests(cpu);
     run_instruction_tests(cpu);
 	run_assembler_tests(cpu);

@@ -3,8 +3,34 @@
 #include "../CPU/Instructions/I-type/I-Instructions.h"
 #include "../CPU/Instructions/S-type/S-Instructions.h"
 #include "../CPU/Instructions/B,U,J-type/B,J,U-instructions.h"
+#include <string>
 
-uint8_t RAM[128 * 1024 * 1024]; //128 MB
+void Memory::write8(uint8_t val, uint32_t addr) {
+    RAM[addr] = val;
+}
+
+void Memory::write16(uint16_t val, uint32_t addr) {
+    memcpy(&RAM[addr], &val, sizeof(val));
+}
+void Memory::write32(uint32_t val, uint32_t addr) {
+    memcpy(&RAM[addr], &val, sizeof(val));
+}
+
+uint8_t Memory::read8(uint32_t addr) {
+    return RAM[addr];
+}
+
+uint16_t Memory::read16(uint32_t addr) {
+    uint16_t temp;
+    memcpy(&temp, &RAM[addr], sizeof(temp));
+    return temp;
+}
+
+uint32_t Memory::read32(uint32_t addr) {
+    uint32_t temp;
+    memcpy(&temp, &RAM[addr], sizeof(temp));
+    return temp;
+}
 
 //constexpr auto out_of_bounds = 0x1;
 //constexpr auto miss_aligned_trap = 0x2;
@@ -140,7 +166,7 @@ constexpr uint32_t make_key(uint32_t funct7, uint32_t funct3, uint32_t opcode)
 InstructionFunc Instructions[4096] = { nullptr }; 
 
 
-void init_table() {
+void Memory::init_table() {
     Instructions[make_key(0, 0, 0x03)] = lb;
     Instructions[make_key(0, 1, 0x03)] = lh;
     Instructions[make_key(0, 2, 0x03)] = lw;
@@ -272,8 +298,6 @@ void init_table() {
     };
 }
 
-void init_RAM() { //needs to move
-    for (auto i : RAM) {
-        i = 0;
-    }
+void Memory::init_RAM() { //needs to move
+    std::fill(RAM, RAM + memory_size, 0);
 }

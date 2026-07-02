@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <vector>
 
+class CPU;
+
 
 struct Elf32_Ehdr {
     unsigned char e_ident[16]; //"magic number" (shows its an elf file)
@@ -38,7 +40,7 @@ class Elf_Loader {
 public:
 	Elf_Loader() = default;
 
-	void load(const std::string& path);
+	void load(CPU& cpu, const std::string& path);
 
 private:
 

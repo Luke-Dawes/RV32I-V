@@ -24,7 +24,7 @@ void run_cpu_tests(CPU& cpu) {
 void test_program_execution(CPU& cpu)
 {
 	// Clean start only once
-	std::memset(RAM, 0, 0x100);
+	std::memset(cpu.memory.data(), 0, 0x100);
 
 	for (int i = 0; i < 32; i++)
 		cpu.registers[i] = 0;
@@ -177,7 +177,7 @@ void test_program_execution(CPU& cpu)
 
 void test_fibonacci_real_rv32i(CPU& cpu)
 {
-	memset(RAM, 0, 0x100);
+	memset(cpu.memory.data(), 0, 0x100);
 
 	for (int i = 0; i < 32; i++)
 		cpu.registers[i] = 0;
@@ -204,10 +204,10 @@ void test_fibonacci_real_rv32i(CPU& cpu)
 	// Load program into RAM
 	for (int i = 0; i < 9; i++) {
 		uint32_t inst = fib_program[i];
-		RAM[i * 4 + 0] = (uint8_t)(inst & 0xFF);         // Lowest byte
-		RAM[i * 4 + 1] = (uint8_t)((inst >> 8) & 0xFF);
-		RAM[i * 4 + 2] = (uint8_t)((inst >> 16) & 0xFF);
-		RAM[i * 4 + 3] = (uint8_t)((inst >> 24) & 0xFF); // Highest byte
+		cpu.memory.data()[i * 4 + 0] = (uint8_t)(inst & 0xFF);         // Lowest byte
+		cpu.memory.data()[i * 4 + 1] = (uint8_t)((inst >> 8) & 0xFF);
+		cpu.memory.data()[i * 4 + 2] = (uint8_t)((inst >> 16) & 0xFF);
+		cpu.memory.data()[i * 4 + 3] = (uint8_t)((inst >> 24) & 0xFF); // Highest byte
 	}
 
 	// Run enough cycles
@@ -221,7 +221,7 @@ void test_fibonacci_real_rv32i(CPU& cpu)
 
 void test_add_five_with_branch_rv32i(CPU& cpu)
 {
-	memset(RAM, 0, 0x100);
+	memset(cpu.memory.data(), 0, 0x100);
 
 	for (int i = 0; i < 32; i++)
 		cpu.registers[i] = 0;
@@ -241,10 +241,10 @@ void test_add_five_with_branch_rv32i(CPU& cpu)
 	// Load program into RAM
 	for (int i = 0; i < 5; i++) {
 		uint32_t inst = add_program[i];
-		RAM[i * 4 + 0] = (uint8_t)(inst & 0xFF);
-		RAM[i * 4 + 1] = (uint8_t)((inst >> 8) & 0xFF);
-		RAM[i * 4 + 2] = (uint8_t)((inst >> 16) & 0xFF);
-		RAM[i * 4 + 3] = (uint8_t)((inst >> 24) & 0xFF);
+		cpu.memory.data()[i * 4 + 0] = (uint8_t)(inst & 0xFF);
+		cpu.memory.data()[i * 4 + 1] = (uint8_t)((inst >> 8) & 0xFF);
+		cpu.memory.data()[i * 4 + 2] = (uint8_t)((inst >> 16) & 0xFF);
+		cpu.memory.data()[i * 4 + 3] = (uint8_t)((inst >> 24) & 0xFF);
 	}
 
 	// Run enough cycles
@@ -258,7 +258,7 @@ void test_add_five_with_branch_rv32i(CPU& cpu)
 
 void test_add_five_without_branch_rv32i(CPU& cpu)
 {
-	memset(RAM, 0, 0x100);
+	memset(cpu.memory.data(), 0, 0x100);
 
 	for (int i = 0; i < 32; i++)
 		cpu.registers[i] = 0;
@@ -278,10 +278,10 @@ void test_add_five_without_branch_rv32i(CPU& cpu)
 	// Load program into RAM
 	for (int i = 0; i < 6; i++) {
 		uint32_t inst = add_program[i];
-		RAM[i * 4 + 0] = (uint8_t)(inst & 0xFF);
-		RAM[i * 4 + 1] = (uint8_t)((inst >> 8) & 0xFF);
-		RAM[i * 4 + 2] = (uint8_t)((inst >> 16) & 0xFF);
-		RAM[i * 4 + 3] = (uint8_t)((inst >> 24) & 0xFF);
+		cpu.memory.data()[i * 4 + 0] = (uint8_t)(inst & 0xFF);
+		cpu.memory.data()[i * 4 + 1] = (uint8_t)((inst >> 8) & 0xFF);
+		cpu.memory.data()[i * 4 + 2] = (uint8_t)((inst >> 16) & 0xFF);
+		cpu.memory.data()[i * 4 + 3] = (uint8_t)((inst >> 24) & 0xFF);
 	}
 
 	// Run enough cycles

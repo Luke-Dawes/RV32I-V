@@ -2,12 +2,10 @@
 #include "../Memory/Memory.h"
 #include <iostream>
 
-CPU::CPU() {
-	init_table();
-}
+CPU::CPU(Memory& mem) : memory(mem) {}
 
 uint32_t CPU::fetch() {
-	if (PC + 3 >= 0x100) {
+	if (PC + 3 >= memory.memory_size) {
 		//throw error
 		throw out_of_bounds; //this is terminal so i dont think it can catch
 	}
@@ -16,18 +14,16 @@ uint32_t CPU::fetch() {
 		throw miss_aligned_trap;
 	}
 
-	std::cout << "PC=" << std::hex << PC << " ";
+	/*std::cout << "PC=" << std::hex << PC << " ";
 	std::cout << "bytes="
-		<< (int)RAM[PC] << " "
+		<< (int)memory.RAM[PC] << " "
 		<< (int)RAM[PC + 1] << " "
 		<< (int)RAM[PC + 2] << " "
 		<< (int)RAM[PC + 3] << std::endl;
-
-	uint32_t data = RAM[PC] |
-		(RAM[PC + 1] << 8) |
-		(RAM[PC + 2] << 16) |
-		(RAM[PC + 3] << 24);
-
+	*/
+	
+	uint32_t data = memory.read32(PC);
+		
 	return data;
 }
 

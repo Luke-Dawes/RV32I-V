@@ -8,11 +8,47 @@ class CPU;
 
 using std::uint32_t;
 
-//little edian memory 
-extern uint8_t RAM[];
-constexpr uint32_t RAM_BASE = 0x80000000;
 
+class Memory {
 
+public:
+
+    uint8_t* data() {
+        return RAM;
+    }
+
+    void write8(uint8_t val, uint32_t addr);
+    void write16(uint16_t val, uint32_t addr);
+    void write32(uint32_t val, uint32_t addr);
+
+    uint8_t read8(uint32_t addr);
+    uint16_t read16(uint32_t addr);
+    uint32_t read32(uint32_t addr);
+
+    Memory() {
+        RAM = new uint8_t[1024 * 1024](); //1MB
+        init_table();
+        init_RAM();
+    }
+
+    ~Memory() {
+        delete[] RAM;
+    }
+
+    static constexpr uint32_t memory_size = 1024 * 1024;
+    uint32_t RAM_BASE = 0x80000000;
+
+private:
+
+    void init_table();
+
+    void init_RAM();
+
+    //little edian memory 
+    uint8_t* RAM;
+    
+
+};
 
 
 enum class Instruction_type {
@@ -36,9 +72,7 @@ struct Decoded_instruction {
 
 Decoded_instruction decode_ins(uint32_t PC);
 
-void init_table();
 
-void init_RAM();
 
 
 
