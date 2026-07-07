@@ -126,6 +126,7 @@
   <ItemGroup>
     <ClCompile Include="src\assembler\Assembler.cpp" />
     <ClCompile Include="src\CPU\CPU.cpp" />
+    <ClCompile Include="src\debugger\Debugger.cpp" />
     <ClCompile Include="src\Elf_loader\Loader.cpp" />
     <ClCompile Include="src\Memory\Memory.cpp" />
     <ClCompile Include="src\CPU\Instructions\B,U,J-type\B,U,J-instructions.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="src\CPU\CPU.h" />
     <ClInclude Include="src\CPU\Instructions\B,U,J-type\B,J,U-instructions.h" />
     <ClInclude Include="src\CPU\Instructions\I-type\I-Instructions.h" />
+    <ClInclude Include="src\debugger\Debugger.h" />
     <ClInclude Include="src\Elf_loader\Loader.h" />
     <ClInclude Include="src\Instructions\Instructions.h" />
     <ClInclude Include="src\Memory\Memory.h" />

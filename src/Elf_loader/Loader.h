@@ -36,17 +36,63 @@ struct Elf32_Phdr {
     uint32_t p_align;          //alignment of the segment
 };
 
+struct Elf32_Shdr
+{
+    uint32_t sh_name;      // Offset into the section name string table
+    uint32_t sh_type;      // Section type
+    uint32_t sh_flags;     // Section flags
+    uint32_t sh_addr;      // Virtual address in memory
+    uint32_t sh_offset;    // Offset in the file
+    uint32_t sh_size;      // Size of the section
+    uint32_t sh_link;      // Link to another section
+    uint32_t sh_info;      // Extra information
+    uint32_t sh_addralign; // Required alignment
+    uint32_t sh_entsize;   // Size of entries (if section is a table)
+};
+
+struct Elf32_Sym
+{
+    uint32_t st_name;
+    uint32_t st_value;
+    uint32_t st_size;
+    uint8_t  st_info;
+    uint8_t  st_other;
+    uint16_t st_shndx;
+};
+
+struct Symbol {
+    uint32_t address;
+    uint32_t size;
+    uint8_t type;
+    std::string name;
+};
+
+constexpr uint32_t SHT_NULL = 0;
+constexpr uint32_t SHT_PROGBITS = 1;
+constexpr uint32_t SHT_SYMTAB = 2;
+constexpr uint32_t SHT_STRTAB = 3;
+
+constexpr auto STT_NOTYPE = 0;
+constexpr auto STT_OBJECT = 1;
+constexpr auto STT_FUNC = 2;
+constexpr auto STT_SECTION = 3;
+
+
 class Elf_Loader {
 public:
 	Elf_Loader() = default;
 
 	void load(CPU& cpu, const std::string& path);
 
+    std::vector<Symbol> symbols;
+    std::vector<Elf32_Shdr> sections;
+
 private:
 
     Elf32_Ehdr header;
     std::vector<Elf32_Phdr> program_headers;
 
-    bool checkHeader() const;
+    bool check_header() const;
+    void load_symbols(std::ifstream& file);
 
 };

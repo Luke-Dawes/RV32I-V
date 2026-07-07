@@ -59,15 +59,15 @@ make the kernal compile into an elf file, and then have my emulator run that elf
 ⏳ Finish testing M extension (multiply/divide)
 
 #### Program Loading
-Implement ELF loader
+✅ Implement ELF loader
 
-Load program segments into RAM
+✅ Load program segments into RAM
 
-Initialise program counter (PC)
+✅ Initialise program counter (PC)
 
-Initialise stack pointer (SP)
+✅ Initialise stack pointer (SP)
 
-Support symbols for debugging
+✅ Support symbols for debugging
 
 #### Debugger
 Single step
