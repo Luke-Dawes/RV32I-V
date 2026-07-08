@@ -1,6 +1,6 @@
-# RV32I
+# RV32I emulator and C kernal to run on it
 
-simple attempt at simulating a RISC-V (RV32I)
+### useful links
 
 https://docs.riscv.org/reference/isa/unpriv/rv32.html - documentation
 
@@ -16,40 +16,11 @@ https://gist.github.com/x0nu11byt3/bcb35c3de461e5fb66173071a2379779 elf loader
 
 
 
-# long term aim
-
-build this, with the base 40 instructions - done
-
-build a like interpreter which translates RISC-V assembly into binary codes - done
-
-add the M extension - multiplication - testing not done however
-
-## left to do
-
-elf loader? and debugger - potentials / stack memory etc
-
-add csr - (control and status registers - exceptions and interrupts
-
-simple cache
-
-virtual memory - sv48/sv57
-
-scheduler (need privilge modes?)
-
-system calls
-
-memory management
-
-performance manager? - i.e. tracks amount of instructions done, cache misses etc
-
-
-
-
-## more detailed plan - with C and C++
+# plan - with C and C++
 make the kernal compile into an elf file, and then have my emulator run that elf file.
 
-### Project 1 - RISC-V Emulator (C++)
-#### CPU
+## Project 1 - RISC-V Emulator (C++)
+### CPU
 ✅ Implement RV32I base ISA
 
 ✅ Build assembler
@@ -58,7 +29,7 @@ make the kernal compile into an elf file, and then have my emulator run that elf
 
 ⏳ Finish testing M extension (multiply/divide)
 
-#### Program Loading
+### Program Loading
 ✅ Implement ELF loader
 
 ✅ Load program segments into RAM
@@ -69,7 +40,7 @@ make the kernal compile into an elf file, and then have my emulator run that elf
 
 ✅ Support symbols for debugging
 
-#### Debugger
+### Debugger
 ✅ Single step
 
 ✅ Continue
@@ -80,11 +51,10 @@ make the kernal compile into an elf file, and then have my emulator run that elf
 
 ✅ Memory viewer
 
-#### Disassembler
+### Disassembler
 ⏳ Symbol lookup
 
-#### privileged architecture - machine mode
-
+### privileged architecture - machine mode
 Implement CSR registers
 
 CSR instructions 
@@ -99,19 +69,19 @@ MRET
 
 Implement interrupts
 
-#### supervisor mode 
+### supervisor mode 
 s-mode CSR instructions
 
 SRET
 
 user mode? 
 
-#### Memory System
+### Memory System
 Physical RAM
 
 Memory-mapped devices
 
-#### Sv39 virtual memory
+### Sv39 virtual memory
 Address translation
 
 Page table walk
@@ -130,7 +100,8 @@ Timer interrupt
 (Optional) Disk device
 
 (Optional) Simple GPU/framebuffer
-#### Performance
+
+### Performance
 Cache simulator
 
 Instruction counter
@@ -144,15 +115,15 @@ Branch statistics
 Performance report
 
 
-### Project 2 - Mini Kernel (C)
-#### Boot
+## Project 2 - Mini Kernel (C)
+### Boot
 Boot assembly (boot.S)
 
 Initialise stack
 
 Jump to kernel_main()
 
-#### Console
+### Console
 UART driver
 
 printf()
@@ -169,7 +140,7 @@ Interrupt handling
 
 Return from trap
 
-#### Memory Management
+### Memory Management
 Physical page allocator
 
 Kernel heap (kmalloc)
@@ -188,7 +159,7 @@ Enable paging
 
 User address spaces
 
-#### Processes
+### Processes
 Process Control Block (PCB)
 
 Create process
@@ -197,14 +168,14 @@ Destroy process
 
 Process states
 
-#### Scheduler
+### Scheduler
 Timer-based scheduling
 
 Round-robin scheduler
 
 Context switching
 
-#### System Calls
+### System Calls
 
 write
 read
