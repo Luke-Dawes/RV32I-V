@@ -46,6 +46,7 @@ Decoded_instruction decode_ins(uint32_t ins) {
     d.rs2 = (ins >> 20) & 0x1F;
     d.funct7 = (ins >> 25) & 0x7F;
     d.b30 = (ins >> 30) & 0x1;
+    d.csr = (ins >> 20) & 0xFFF;
 
     switch (d.opcode)
     {
@@ -216,9 +217,6 @@ void Memory::init_table() {
     Instructions[make_key(0, 0, 0x37)] = lui;   // Opcode 0x37
     Instructions[make_key(0, 0, 0x17)] = auipc; // Opcode 0x17
 
-    // --- SYSTEM (Opcode 0x73) ---
-    Instructions[make_key(0, 0, 0x73)] = ecall; // Handles ECALL/EBREAK
-
     Instructions[make_key(0x01, 0, 0x33)] = mul;
     Instructions[make_key(0x01, 1, 0x33)] = mulh;
     Instructions[make_key(0x01, 2, 0x33)] = mulhsu;
@@ -227,6 +225,15 @@ void Memory::init_table() {
     Instructions[make_key(0x01, 5, 0x33)] = divu;
     Instructions[make_key(0x01, 6, 0x33)] = rem;
     Instructions[make_key(0x01, 7, 0x33)] = remu;
+
+    // --- SYSTEM (Opcode 0x73) ---
+    Instructions[make_key(0, 1, 0x73)] = csrrw;
+    Instructions[make_key(0, 2, 0x73)] = csrrs;
+    Instructions[make_key(0, 3, 0x73)] = csrrc;
+    Instructions[make_key(0, 5, 0x73)] = csrrwi;
+    Instructions[make_key(0, 6, 0x73)] = csrrsi;
+    Instructions[make_key(0, 7, 0x73)] = csrrci;
+    Instructions[make_key(0, 0, 0x73)] = system;
 
 
     instruction_debug_table = {

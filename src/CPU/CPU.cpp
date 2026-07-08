@@ -38,13 +38,13 @@ void CPU::execute(Decoded_instruction d) {
 
 	uint32_t key = make_key(d.funct7, d.funct3, d.opcode);
 
-	std::cout << std::hex
+	/*std::cout << std::hex
 		<< "key=" << key
 		<< " op=" << (int)d.opcode
 		<< " f3=" << (int)d.funct3
 		<< " f7=" << (int)d.funct7
 		<< " b30=" << (int)d.b30
-		<< std::endl;
+		<< std::endl;*/
 
 	if (Instructions[key] != nullptr) {
 		auto it = instruction_debug_table.find(key);

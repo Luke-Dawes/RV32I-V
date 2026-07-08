@@ -24,5 +24,13 @@ void lbu(CPU& cpu, Decoded_instruction& ins);
 void lhu(CPU& cpu, Decoded_instruction& ins);
 
 void jalr(CPU& cpu, Decoded_instruction& ins);
-void ecall(CPU& cpu, Decoded_instruction& ins);
-void ebreak(CPU& cpu, Decoded_instruction& ins);
+
+void system(CPU& cpu, Decoded_instruction& ins);
+
+void csrrw(CPU& cpu, Decoded_instruction& ins);
+void csrrs(CPU& cpu, Decoded_instruction& ins);
+void csrrc(CPU& cpu, Decoded_instruction& ins);
+void csrrwi(CPU& cpu, Decoded_instruction& ins);
+void csrrsi(CPU& cpu, Decoded_instruction& ins);
+void csrrci(CPU& cpu, Decoded_instruction& ins);
+

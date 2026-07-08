@@ -1,7 +1,9 @@
 #pragma once
 #include <cstdint>
 
+class CSR;
 class Memory;
+enum Privilage_mode;
 
 //uint8_t RAM[];
 
@@ -31,6 +33,9 @@ public:
 	//uint8_t* memory = &RAM[0]; //probably unused as RAM will be global
 
 	Memory& memory;
+	CSR csrs;
+	Privilage_mode mode;
+
 private:
 
 	uint32_t fetch();
