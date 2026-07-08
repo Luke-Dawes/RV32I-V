@@ -70,44 +70,58 @@ make the kernal compile into an elf file, and then have my emulator run that elf
 ✅ Support symbols for debugging
 
 #### Debugger
-Single step
+✅ Single step
 
-Continue
+✅ Continue
 
-Breakpoints
+✅ Breakpoints
 
-Register viewer
+✅ Register viewer
 
-Memory viewer
+✅ Memory viewer
 
 #### Disassembler
-Symbol lookup
+⏳ Symbol lookup
 
-Privileged Architecture
+#### privileged architecture - machine mode
 
-#### Implement CSR registers
-Implement privilege modes (Machine, Supervisor, User)
+Implement CSR registers
+
+CSR instructions 
 
 Implement exceptions
 
+ECALL / EBREAK / MRET
+
 Implement interrupts
 
-Timer interrupt
+#### supervisor mode 
+s-mode CSR instructions
+
+SRET
+
+user mode? 
+
 #### Memory System
 Physical RAM
 
 Memory-mapped devices
 
-MMU
+#### Sv39 virtual memory
+Address translation
 
-Sv39 virtual memory
+Page table walk
+
+Sv39
+
+Page faults
 
 TLB (optional)
 
 Hardware Devices
 UART (console output)
 
-Timer
+Timer interrupt
 
 (Optional) Disk device
 
