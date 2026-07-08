@@ -62,7 +62,7 @@ void CPU::execute(Decoded_instruction d) {
 	}
 }
 
-void CPU::tick() { //poor set up
+void CPU::tick() { 
 	branch_happended = false;
 	uint32_t ins = fetch();
 
@@ -74,12 +74,12 @@ void CPU::tick() { //poor set up
 		PC += 4;
 	}
 
-	std::cout << "PC: " << PC
+	/*std::cout << "PC: " << PC
 		<< " | x1: " << registers[1]
 		<< " | x2: " << registers[2]
 		<< " | x3: " << registers[3]
 		<< " | x5: " << registers[5] 
 		<< "\n";
 
-	std::cout << "\n";
+	std::cout << "\n";*/
 }
