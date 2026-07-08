@@ -89,9 +89,13 @@ Implement CSR registers
 
 CSR instructions 
 
+Implement Trap handling
+
 Implement exceptions
 
-ECALL / EBREAK / MRET
+ECALL / EBREAK 
+
+MRET
 
 Implement interrupts
 
