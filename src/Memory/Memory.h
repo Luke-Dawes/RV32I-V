@@ -69,6 +69,8 @@ struct Decoded_instruction {
     uint8_t funct7;
     uint32_t b30;
     uint16_t csr;
+
+    uint32_t full;
 };
 
 Decoded_instruction decode_ins(uint32_t PC);

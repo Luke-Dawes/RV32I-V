@@ -24,6 +24,7 @@ public:
 	CPU(Memory& mem);
 
 	void tick();
+	void raise_trap(uint32_t cause, uint32_t tval);
 
 	stage current_stage;
 	bool branch_happended;

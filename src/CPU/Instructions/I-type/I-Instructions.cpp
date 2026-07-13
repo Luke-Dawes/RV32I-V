@@ -1,6 +1,7 @@
 #include "I-Instructions.h"
 #include "../../CPU.h"
 #include "../../../Memory/Memory.h"
+#include "../../CSR.h"
 
 /*inline int32_t sixteen_to_thirtytwo(uint16_t ins.imm) {
 	return (static_cast<int32_t>(ins.imm) << 20) >> 20;
@@ -82,7 +83,30 @@ void jalr(CPU& cpu, Decoded_instruction& ins) {
 	cpu.PC = cpu.registers[ins.rs1] + ins.imm;
 }
 
-void system(CPU& cpu, Decoded_instruction& ins) {}
+void system(CPU& cpu, Decoded_instruction& ins) {
+	switch (ins.imm)
+	{
+	case 0x000: // ECALL
+		cpu.raise_trap(11, 0);
+		break;
+
+	case 0x001: // EBREAK
+		cpu.raise_trap(3, 0);
+		break;
+
+	case 0x302: // MRET
+		cpu.PC = cpu.csrs.read(CSR_LOCATIONS::MEPC);
+		break;
+
+	case 0x105: // WFI
+		// Can be a no-op for now.
+		break;
+
+	default:
+		cpu.raise_trap(2, ins.full); // Illegal instruction
+		break;
+	}
+}
 
 void csrrw(CPU& cpu, Decoded_instruction& ins) {
 

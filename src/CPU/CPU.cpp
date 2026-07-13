@@ -1,5 +1,6 @@
 #include "CPU.h"
 #include "../Memory/Memory.h"
+#include "CSR.h"
 #include <iostream>
 
 CPU::CPU(Memory& mem) : memory(mem) {}
@@ -59,6 +60,7 @@ void CPU::execute(Decoded_instruction d) {
 	}
 	else {
 		std::cout << "unknown instruction, key=" << key << "\n";
+		raise_trap(2, d.full); // Illegal instruction
 	}
 }
 
@@ -82,4 +84,12 @@ void CPU::tick() {
 		<< "\n";
 
 	std::cout << "\n";*/
+}
+
+void CPU::raise_trap(uint32_t cause, uint32_t tval) {
+	csrs.write(CSR_LOCATIONS::MEPC, PC);
+	csrs.write(CSR_LOCATIONS::MCAUSE, cause);
+	csrs.write(CSR_LOCATIONS::MTVAL, tval);
+
+	PC = csrs.read(CSR_LOCATIONS::MTVEC);
 }

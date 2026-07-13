@@ -47,6 +47,7 @@ Decoded_instruction decode_ins(uint32_t ins) {
     d.funct7 = (ins >> 25) & 0x7F;
     d.b30 = (ins >> 30) & 0x1;
     d.csr = (ins >> 20) & 0xFFF;
+    d.full = ins;
 
     switch (d.opcode)
     {
