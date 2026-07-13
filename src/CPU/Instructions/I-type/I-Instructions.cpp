@@ -86,7 +86,7 @@ void system(CPU& cpu, Decoded_instruction& ins) {}
 
 void csrrw(CPU& cpu, Decoded_instruction& ins) {
 
-	uint64_t old = cpu.csrs.read(ins.csr);
+	uint32_t old = cpu.csrs.read(ins.csr);
 
 	if (ins.rd != 0) {
 		cpu.registers[ins.rd] = old;
@@ -97,7 +97,7 @@ void csrrw(CPU& cpu, Decoded_instruction& ins) {
 
 void csrrs(CPU& cpu, Decoded_instruction& ins) {
 
-	uint64_t old = cpu.csrs.read(ins.csr);
+	uint32_t old = cpu.csrs.read(ins.csr);
 
 	if (ins.rd != 0)
 		cpu.registers[ins.rd] = old;
@@ -108,7 +108,7 @@ void csrrs(CPU& cpu, Decoded_instruction& ins) {
 }
 
 void csrrc(CPU& cpu, Decoded_instruction& ins) {
-	uint64_t old = cpu.csrs.read(ins.csr);
+	uint32_t old = cpu.csrs.read(ins.csr);
 
 	if (ins.rd != 0)
 		cpu.registers[ins.rd] = old;
@@ -118,7 +118,7 @@ void csrrc(CPU& cpu, Decoded_instruction& ins) {
 }
 
 void csrrwi(CPU& cpu, Decoded_instruction& ins) {
-	uint64_t old = cpu.csrs.read(ins.csr);
+	uint32_t old = cpu.csrs.read(ins.csr);
 
 	if (ins.rd != 0)
 		cpu.registers[ins.rd] = old;
@@ -128,12 +128,12 @@ void csrrwi(CPU& cpu, Decoded_instruction& ins) {
 
 void csrrsi(CPU& cpu, Decoded_instruction& ins) {
 
-	uint64_t old = cpu.csrs.read(ins.csr);
+	uint32_t old = cpu.csrs.read(ins.csr);
 
 	if (ins.rd != 0) 
 		cpu.registers[ins.rd] = old;
 	
-	uint64_t new_imm = ins.imm & 0x1F;
+	uint32_t new_imm = ins.imm & 0x1F;
 
 	if (new_imm != 0)
 		cpu.csrs.write(ins.csr, old | new_imm);
@@ -141,12 +141,12 @@ void csrrsi(CPU& cpu, Decoded_instruction& ins) {
 }
 void csrrci(CPU& cpu, Decoded_instruction& ins) {
 
-	uint64_t old = cpu.csrs.read(ins.csr);
+	uint32_t old = cpu.csrs.read(ins.csr);
 
 	if (ins.rd != 0)
 		cpu.registers[ins.rd] = old;
 
-	uint64_t new_imm = ins.imm & 0x1F;
+	uint32_t new_imm = ins.imm & 0x1F;
 
 	if (new_imm != 0)
 		cpu.csrs.write(ins.csr, old & ~new_imm);
