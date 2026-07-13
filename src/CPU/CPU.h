@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
+#include "CSR.h"
 
-class CSR;
 class Memory;
 enum Privilage_mode;
 

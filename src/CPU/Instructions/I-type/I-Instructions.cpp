@@ -84,9 +84,70 @@ void jalr(CPU& cpu, Decoded_instruction& ins) {
 
 void system(CPU& cpu, Decoded_instruction& ins) {}
 
-void csrrw(CPU& cpu, Decoded_instruction& ins);
-void csrrs(CPU& cpu, Decoded_instruction& ins);
-void csrrc(CPU& cpu, Decoded_instruction& ins);
-void csrrwi(CPU& cpu, Decoded_instruction& ins);
-void csrrsi(CPU& cpu, Decoded_instruction& ins);
-void csrrci(CPU& cpu, Decoded_instruction& ins);
+void csrrw(CPU& cpu, Decoded_instruction& ins) {
+
+	uint64_t old = cpu.csrs.read(ins.csr);
+
+	if (ins.rd != 0) {
+		cpu.registers[ins.rd] = old;
+	}
+
+	cpu.csrs.write(ins.csr, cpu.registers[ins.rs1]);
+}
+
+void csrrs(CPU& cpu, Decoded_instruction& ins) {
+
+	uint64_t old = cpu.csrs.read(ins.csr);
+
+	if (ins.rd != 0)
+		cpu.registers[ins.rd] = old;
+
+	if (ins.rs1 != 0)
+		cpu.csrs.write(ins.csr, old | cpu.registers[ins.rs1]);
+
+}
+
+void csrrc(CPU& cpu, Decoded_instruction& ins) {
+	uint64_t old = cpu.csrs.read(ins.csr);
+
+	if (ins.rd != 0)
+		cpu.registers[ins.rd] = old;
+
+	if (ins.rs1 != 0)
+		cpu.csrs.write(ins.csr, old & ~cpu.registers[ins.rs1]);
+}
+
+void csrrwi(CPU& cpu, Decoded_instruction& ins) {
+	uint64_t old = cpu.csrs.read(ins.csr);
+
+	if (ins.rd != 0)
+		cpu.registers[ins.rd] = old;
+
+	cpu.csrs.write(ins.csr, ins.imm & 0x1F);
+}
+
+void csrrsi(CPU& cpu, Decoded_instruction& ins) {
+
+	uint64_t old = cpu.csrs.read(ins.csr);
+
+	if (ins.rd != 0) 
+		cpu.registers[ins.rd] = old;
+	
+	uint64_t new_imm = ins.imm & 0x1F;
+
+	if (new_imm != 0)
+		cpu.csrs.write(ins.csr, old | new_imm);
+
+}
+void csrrci(CPU& cpu, Decoded_instruction& ins) {
+
+	uint64_t old = cpu.csrs.read(ins.csr);
+
+	if (ins.rd != 0)
+		cpu.registers[ins.rd] = old;
+
+	uint64_t new_imm = ins.imm & 0x1F;
+
+	if (new_imm != 0)
+		cpu.csrs.write(ins.csr, old & ~new_imm);
+}

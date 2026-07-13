@@ -9,6 +9,7 @@ enum Privilage_mode {
 
 class CSR {
 public:
+
 	uint32_t read(uint16_t csr) const;
 	void write(uint16_t csr, uint32_t value);
 
