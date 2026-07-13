@@ -55,9 +55,9 @@ make the kernal compile into an elf file, and then have my emulator run that elf
 ⏳ Symbol lookup
 
 ### privileged architecture - machine mode
-Implement CSR registers
+✅ Implement CSR registers
 
-CSR instructions 
+✅ CSR instructions 
 
 Implement Trap handling
 
