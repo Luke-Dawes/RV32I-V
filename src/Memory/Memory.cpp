@@ -4,31 +4,43 @@
 #include "../CPU/Instructions/S-type/S-Instructions.h"
 #include "../CPU/Instructions/B,U,J-type/B,J,U-instructions.h"
 #include <string>
+#include <iostream>
+
+uint32_t Memory::translate(uint32_t addr)
+{
+    if (addr < RAM_BASE ||
+        addr >= RAM_BASE + memory_size)
+    {
+        throw 0x100;
+    }
+
+    return addr - RAM_BASE;
+}
 
 void Memory::write8(uint8_t val, uint32_t addr) {
-    RAM[addr] = val;
+    RAM[translate(addr)] = val;
 }
 
 void Memory::write16(uint16_t val, uint32_t addr) {
-    memcpy(&RAM[addr], &val, sizeof(val));
+    memcpy(&RAM[translate(addr)], &val, sizeof(val));
 }
 void Memory::write32(uint32_t val, uint32_t addr) {
-    memcpy(&RAM[addr], &val, sizeof(val));
+    memcpy(&RAM[translate(addr)], &val, sizeof(val));
 }
 
 uint8_t Memory::read8(uint32_t addr) {
-    return RAM[addr];
+    return RAM[translate(addr)];
 }
 
 uint16_t Memory::read16(uint32_t addr) {
     uint16_t temp;
-    memcpy(&temp, &RAM[addr], sizeof(temp));
+    memcpy(&temp, &RAM[translate(addr)], sizeof(temp));
     return temp;
 }
 
 uint32_t Memory::read32(uint32_t addr) {
     uint32_t temp;
-    memcpy(&temp, &RAM[addr], sizeof(temp));
+    memcpy(&temp, &RAM[translate(addr)], sizeof(temp));
     return temp;
 }
 
@@ -64,7 +76,7 @@ Decoded_instruction decode_ins(uint32_t ins) {
     {
         d.type = Instruction_type::I;
 
-        int32_t imm = ins >> 20;
+        int32_t imm = (ins >> 20) & 0xFFF;
 
         // 2. Explicitly sign-extend if bit 11 of the immediate (bit 31 of the instruction) is 1
         if (imm & 0x800) {
@@ -154,10 +166,12 @@ constexpr uint32_t make_key(uint32_t funct7, uint32_t funct3, uint32_t opcode)
 {
     uint32_t cls = 0;
 
-    if (funct7 == 0x20)
-        cls = 1;       // SUB/SRA
-    else if (funct7 == 0x01)
-        cls = 2;       // M extension
+    if (opcode == 0x33) { //only r type 
+        if (funct7 == 0x20)
+            cls = 1;       // SUB/SRA
+        else if (funct7 == 0x01)
+            cls = 2;       // M extension
+    }
 
     return ((cls & 0x3) << 10) |
         ((funct3 & 0x7) << 7) |

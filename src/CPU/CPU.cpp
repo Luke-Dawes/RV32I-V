@@ -6,7 +6,7 @@
 CPU::CPU(Memory& mem) : memory(mem) {}
 
 uint32_t CPU::fetch() {
-	if (PC + 3 >= memory.memory_size) {
+	if (PC < memory.RAM_BASE || PC - memory.RAM_BASE > memory.memory_size - 4) {
 		//throw error
 		throw out_of_bounds; //this is terminal so i dont think it can catch
 	}
@@ -68,7 +68,19 @@ void CPU::tick() {
 	branch_happended = false;
 	uint32_t ins = fetch();
 
+	std::cout << "RAW INSTRUCTION: 0x"
+		<< std::hex
+		<< ins
+		<< "\n";
+
 	Decoded_instruction d = decode(ins);
+
+	std::cout
+		<< " rd=x" << static_cast<int>(d.rd)
+		<< " rs1=x" << static_cast<int>(d.rs1)
+		<< " rs1_val=0x" << std::hex << registers[d.rs1]
+		<< " imm=0x" << d.imm
+		<< std::dec << "\n";
 	 
 	execute(d);
 
@@ -87,6 +99,9 @@ void CPU::tick() {
 }
 
 void CPU::raise_trap(uint32_t cause, uint32_t tval) {
+
+	std::cout << "\n\n raising trap \n\n";
+
 	csrs.write(CSR_LOCATIONS::MEPC, PC);
 	csrs.write(CSR_LOCATIONS::MCAUSE, cause);
 	csrs.write(CSR_LOCATIONS::MTVAL, tval);

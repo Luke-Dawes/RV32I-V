@@ -3,6 +3,7 @@
 #include <fstream>
 #include "../Memory/Memory.h"
 #include "../CPU/CPU.h"
+#include <iostream>
 
 bool Elf_Loader::check_header() const {
 
@@ -86,10 +87,21 @@ void Elf_Loader::load(CPU& cpu, const std::string& path) {
 
     cpu.PC = header.e_entry;
     cpu.registers[2] = cpu.memory.RAM_BASE + cpu.memory.memory_size - 16;
+    cpu.registers[0] = 0;
 
     //debugging - load symbols
     load_symbols(file);
     file.close();
+
+    std::cout << "Starting PC: 0x"
+        << std::hex
+        << cpu.PC
+        << std::endl;
+
+    std::cout << "ELF entry: 0x"
+        << std::hex
+        << header.e_entry
+        << std::endl;
 
 }
 

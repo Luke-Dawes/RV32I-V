@@ -2,6 +2,7 @@
 #include "../../CPU.h"
 #include "../../../Memory/Memory.h"
 #include "../../CSR.h"
+#include <iostream>
 
 /*inline int32_t sixteen_to_thirtytwo(uint16_t ins.imm) {
 	return (static_cast<int32_t>(ins.imm) << 20) >> 20;
@@ -9,6 +10,14 @@
 */
 
 void addi(CPU& cpu, Decoded_instruction& ins) {
+
+	std::cout << "ADDI "
+		<< "rd=x" << ins.rd
+		<< " rs1=x" << ins.rs1
+		<< " rs1_val=0x" << std::hex << cpu.registers[ins.rs1]
+		<< " imm=0x" << ins.imm
+		<< std::dec << "\n";
+
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] + ins.imm;
 }
 

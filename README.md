@@ -117,9 +117,9 @@ Performance report
 
 ## Project 2 - Mini Kernel (C)
 ### Boot
-Boot assembly (boot.S)
+✅ Boot assembly (boot.S)
 
-Initialise stack
+✅ Initialise stack
 
 Jump to kernel_main()
 

@@ -35,10 +35,12 @@ public:
         delete[] RAM;
     }
 
-    static constexpr uint32_t memory_size = 1024 * 1024;
     uint32_t RAM_BASE = 0x80000000;
+    static constexpr uint32_t memory_size = 1024 * 1024;
 
 private:
+
+    uint32_t translate(uint32_t addr);
 
     void init_table();
 

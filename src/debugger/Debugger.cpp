@@ -81,14 +81,36 @@ void Debugger::remove_breakpoint(uint32_t addr) {
 
 void Debugger::continue_execution(CPU& cpu) {
 
-	if (!has_breakpoint(cpu.PC)) {
-		cpu.tick();
-		dump_reg(cpu);
-		dump_mem(cpu, cpu.PC, 64);
-	}
+	std::cout << "Initial SP: 0x"
+		<< std::hex
+		<< cpu.registers[2]
+		<< "\n";
 
-	std::cout << "Breakpoint hit at 0x"
-		<< std::hex << cpu.PC << '\n';
+
+	uint64_t instructions = 0;
+
+
+
+	while (instructions++ < 20) {
+
+		if (has_breakpoint(cpu.PC))
+			break;
+
+		try {
+			cpu.tick();
+		}
+		catch(...) {
+			dump_reg(cpu);
+			dump_mem(cpu, cpu.PC, 64);
+			std::cout << "\n error caught";
+			break;
+		}
+	}
+	
+	std::cout << "\n\n program hit breakpoint or ended at 0x" << std::hex << cpu.PC << '\n\n';
+
+	dump_reg(cpu);
+	dump_mem(cpu, cpu.PC, 64);
 
 
 }

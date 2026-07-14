@@ -29,7 +29,7 @@ void test_program_execution(CPU& cpu)
 	for (int i = 0; i < 32; i++)
 		cpu.registers[i] = 0;
 
-	cpu.PC = 0x1000;
+	cpu.PC = cpu.memory.RAM_BASE;
 
 	Decoded_instruction d;
 
@@ -182,7 +182,7 @@ void test_fibonacci_real_rv32i(CPU& cpu)
 	for (int i = 0; i < 32; i++)
 		cpu.registers[i] = 0;
 
-	cpu.PC = 0;
+	cpu.PC = cpu.memory.RAM_BASE;
 
 	uint32_t fib_program[] = {
 		// --- Initialization Phase ---
@@ -226,7 +226,7 @@ void test_add_five_with_branch_rv32i(CPU& cpu)
 	for (int i = 0; i < 32; i++)
 		cpu.registers[i] = 0;
 
-	cpu.PC = 0;
+	cpu.PC = cpu.memory.RAM_BASE;
 
 	// RISC-V RV32I Machine Code
 	uint32_t add_program[] = {
@@ -263,7 +263,7 @@ void test_add_five_without_branch_rv32i(CPU& cpu)
 	for (int i = 0; i < 32; i++)
 		cpu.registers[i] = 0;
 
-	cpu.PC = 0;
+	cpu.PC = cpu.memory.RAM_BASE;
 
 	// RISC-V RV32I Machine Code
 	uint32_t add_program[] = {

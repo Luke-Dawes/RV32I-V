@@ -51,18 +51,22 @@ void bgeu(CPU& cpu, Decoded_instruction& ins) { //zero extends - imm is a int bu
 
 // ----- J type ----------
 void jal(CPU& cpu, Decoded_instruction& ins) {
-	cpu.registers[ins.rd] = cpu.PC + 4; 
-	cpu.PC += ins.imm;
-	std::cout << "JAL happended and PC is currently =" << cpu.PC << "\n";
-	cpu.branch_happended = true;
+	if (ins.rd != 0) {
+		cpu.registers[ins.rd] = cpu.PC + 4;
+	}
+
+		cpu.PC += ins.imm;
+		std::cout << "JAL happended and PC is currently =" << cpu.PC << "\n";
+		cpu.branch_happended = true;
+	
 
 }
 
 // ----- U type ----------
 void lui(CPU& cpu, Decoded_instruction& ins) {
-	cpu.registers[ins.rd] = ins.imm << 12;
+	cpu.registers[ins.rd] = ins.imm;
 }
 
 void auipc(CPU& cpu, Decoded_instruction& ins) {
-	cpu.registers[ins.rd] = cpu.PC + (ins.imm << 12);
+	cpu.registers[ins.rd] = cpu.PC + ins.imm;
 }
