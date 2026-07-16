@@ -145,6 +145,7 @@
     <ClInclude Include="src\CPU\CSR.h" />
     <ClInclude Include="src\CPU\Instructions\B,U,J-type\B,J,U-instructions.h" />
     <ClInclude Include="src\CPU\Instructions\I-type\I-Instructions.h" />
+    <ClInclude Include="src\CPU\Trap.h" />
     <ClInclude Include="src\debugger\Debugger.h" />
     <ClInclude Include="src\Elf_loader\Loader.h" />
     <ClInclude Include="src\Instructions\Instructions.h" />

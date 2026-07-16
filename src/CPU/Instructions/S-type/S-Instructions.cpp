@@ -4,7 +4,7 @@
 
 
 void sb(CPU& cpu, Decoded_instruction& ins) {
-	cpu.memory.write8(cpu.registers[ins.rs2] & 0xFF, cpu.registers[ins.rs1] + ins.imm);
+	cpu.memory.write8(cpu.registers[ins.rs1] + ins.imm, cpu.registers[ins.rs2] & 0xFF);
 }
 
 void sh(CPU& cpu, Decoded_instruction& ins) {
@@ -12,7 +12,7 @@ void sh(CPU& cpu, Decoded_instruction& ins) {
 
 	uint16_t value = cpu.registers[ins.rs2];
 
-	cpu.memory.write16(value, addr);
+	cpu.memory.write16(addr, value);
 
 }
 void sw(CPU& cpu, Decoded_instruction& ins) {
@@ -20,6 +20,6 @@ void sw(CPU& cpu, Decoded_instruction& ins) {
 
 	int32_t value = cpu.registers[ins.rs2];
 
-	cpu.memory.write32(value, addr);
+	cpu.memory.write32(addr, value);
 
 }

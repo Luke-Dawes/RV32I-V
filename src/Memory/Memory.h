@@ -6,8 +6,12 @@
 
 class CPU;
 
-using std::uint32_t;
-
+enum MemoryError
+{
+    None,
+    Misaligned,
+    AccessFault
+};
 
 class Memory {
 
@@ -17,13 +21,13 @@ public:
         return RAM;
     }
 
-    void write8(uint8_t val, uint32_t addr);
-    void write16(uint16_t val, uint32_t addr);
-    void write32(uint32_t val, uint32_t addr);
+    MemoryError write8(uint32_t addr, uint8_t val);
+    MemoryError write16(uint32_t addr, uint16_t val);
+    MemoryError write32(uint32_t addr, uint32_t val);
 
-    uint8_t read8(uint32_t addr);
-    uint16_t read16(uint32_t addr);
-    uint32_t read32(uint32_t addr);
+    MemoryError read8(uint32_t addr, uint32_t& value);
+    MemoryError read16(uint32_t addr, uint32_t& value);
+    MemoryError read32(uint32_t addr, uint32_t& value);
 
     Memory() {
         RAM = new uint8_t[1024 * 1024](); //1MB
@@ -40,7 +44,9 @@ public:
 
 private:
 
-    uint32_t translate(uint32_t addr);
+    bool valid_address(uint32_t addr, uint32_t size);
+
+    inline uint32_t translate(uint32_t addr);
 
     void init_table();
 

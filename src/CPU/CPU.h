@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 #include "CSR.h"
+#include <optional>
+#include "Trap.h"
 
 class Memory;
 enum Privilage_mode;
@@ -14,19 +16,18 @@ struct Decoded_instruction;
 
 constexpr size_t REG_COUNT = 32;
 
-enum stage {
-	FETCH, DECODE, EXECUTE
+struct fetched_result {
+	uint32_t instruction;
+	std::optional<Trap> trap;
 };
-
 
 class CPU {
 public:
 	CPU(Memory& mem);
 
 	void tick();
-	void raise_trap(uint32_t cause, uint32_t tval);
+	void enter_trap(const Trap& trap);
 
-	stage current_stage;
 	bool branch_happended;
 	uint32_t registers[REG_COUNT] = { 0 };
 	uint32_t PC = 0;
@@ -39,8 +40,9 @@ public:
 
 private:
 
-	uint32_t fetch();
+	fetched_result fetch();
 	//decode is in the memory file 
 	Decoded_instruction decode(uint32_t ins);
-	void execute(const Decoded_instruction ins); //idk where im storing this 
+	std::optional<Trap> execute(const Decoded_instruction ins); 
 };
+

@@ -26,6 +26,8 @@ int main() {
 
 	Debugger debug;
 
+	//debug.shell(cpu); user CLI interphase 
+
 	//debug.continue_execution(cpu);
 
 	return 1;

@@ -2,30 +2,28 @@
 #include "../Memory/Memory.h"
 #include "CSR.h"
 #include <iostream>
+#include "Trap.h"
 
 CPU::CPU(Memory& mem) : memory(mem) {}
 
-uint32_t CPU::fetch() {
+fetched_result CPU::fetch() {
+
+	fetched_result result; 
+
 	if (PC < memory.RAM_BASE || PC - memory.RAM_BASE > memory.memory_size - 4) {
 		//throw error
-		throw out_of_bounds; //this is terminal so i dont think it can catch
+		result.trap = Trap::InstructionAccessFault(PC);
+		return result;
 	}
 
 	if (PC % 4 != 0) {
-		throw miss_aligned_trap;
+		result.trap = Trap::InstructionAddressMisaligned(PC);
+		return result;
 	}
-
-	/*std::cout << "PC=" << std::hex << PC << " ";
-	std::cout << "bytes="
-		<< (int)memory.RAM[PC] << " "
-		<< (int)RAM[PC + 1] << " "
-		<< (int)RAM[PC + 2] << " "
-		<< (int)RAM[PC + 3] << std::endl;
-	*/
 	
-	uint32_t data = memory.read32(PC);
+	result.instruction = memory.read32(PC);
 		
-	return data;
+	return result;
 }
 
 Decoded_instruction CPU::decode(uint32_t ins) {
@@ -33,22 +31,15 @@ Decoded_instruction CPU::decode(uint32_t ins) {
 }
 
 
-void CPU::execute(Decoded_instruction d) {
+std::optional<Trap> CPU::execute(Decoded_instruction d) {
 
 	std::cout << "PC = " << std::hex << PC << std::endl;
 
 	uint32_t key = make_key(d.funct7, d.funct3, d.opcode);
 
-	/*std::cout << std::hex
-		<< "key=" << key
-		<< " op=" << (int)d.opcode
-		<< " f3=" << (int)d.funct3
-		<< " f7=" << (int)d.funct7
-		<< " b30=" << (int)d.b30
-		<< std::endl;*/
-
 	if (Instructions[key] != nullptr) {
 		auto it = instruction_debug_table.find(key);
+
 		if (it != instruction_debug_table.end()) {
 			std::cout << "instruction is " << it->second << "\n";
 		}
@@ -56,55 +47,53 @@ void CPU::execute(Decoded_instruction d) {
 		{
 			std::cout << "instruction found in instruction table but not map";
 		}
+
 		Instructions[key](*this, d);
 	}
 	else {
 		std::cout << "unknown instruction, key=" << key << "\n";
-		raise_trap(2, d.full); // Illegal instruction
+		return Trap::IllegalInstruction(d.full);
 	}
 }
 
 void CPU::tick() { 
 	branch_happended = false;
-	uint32_t ins = fetch();
 
-	std::cout << "RAW INSTRUCTION: 0x"
-		<< std::hex
-		<< ins
-		<< "\n";
 
-	Decoded_instruction d = decode(ins);
+	auto fetched = fetch();
 
-	std::cout
-		<< " rd=x" << static_cast<int>(d.rd)
-		<< " rs1=x" << static_cast<int>(d.rs1)
-		<< " rs1_val=0x" << std::hex << registers[d.rs1]
-		<< " imm=0x" << d.imm
-		<< std::dec << "\n";
-	 
-	execute(d);
+	if (fetched.trap) 
+	{
+		enter_trap(*fetched.trap);
+		return;
+	}
+
+	std::cout << "RAW INSTRUCTION: 0x" << std::hex << fetched.instruction << "\n";
+
+	Decoded_instruction decoded = decode(fetched.instruction);
+
+	if (auto trap = execute(decoded)) {
+		enter_trap(*trap);
+	}
 
 	if (!branch_happended) {
 		PC += 4;
 	}
-
-	/*std::cout << "PC: " << PC
-		<< " | x1: " << registers[1]
-		<< " | x2: " << registers[2]
-		<< " | x3: " << registers[3]
-		<< " | x5: " << registers[5] 
-		<< "\n";
-
-	std::cout << "\n";*/
 }
 
-void CPU::raise_trap(uint32_t cause, uint32_t tval) {
+void CPU::enter_trap(const Trap& trap) {
 
 	std::cout << "\n\n raising trap \n\n";
 
 	csrs.write(CSR_LOCATIONS::MEPC, PC);
-	csrs.write(CSR_LOCATIONS::MCAUSE, cause);
-	csrs.write(CSR_LOCATIONS::MTVAL, tval);
 
-	PC = csrs.read(CSR_LOCATIONS::MTVEC);
+	uint32_t cause = trap.cause;
+
+	if (trap.interrupt)
+		cause |= (1u << 31);
+
+	csrs.write(CSR_LOCATIONS::MCAUSE, cause);
+	csrs.write(CSR_LOCATIONS::MTVAL, trap.tval);
+
+	PC = csrs.read(CSR_LOCATIONS::MTVEC) & ~0x3;
 }

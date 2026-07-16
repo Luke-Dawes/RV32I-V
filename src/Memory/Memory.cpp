@@ -6,46 +6,104 @@
 #include <string>
 #include <iostream>
 
-uint32_t Memory::translate(uint32_t addr)
-{
-    if (addr < RAM_BASE ||
-        addr >= RAM_BASE + memory_size)
-    {
-        throw 0x100;
-    }
+bool Memory::valid_address(uint32_t addr, uint32_t size) {
+    
+    if (addr < RAM_BASE)
+        return false;
 
+    uint32_t offset = addr - RAM_BASE;
+
+    return offset + size <= memory_size;
+}
+
+inline uint32_t Memory::translate(uint32_t addr)
+{
     return addr - RAM_BASE;
 }
 
-void Memory::write8(uint8_t val, uint32_t addr) {
+
+MemoryError read8(uint32_t addr, uint32_t& value);
+MemoryError read16(uint32_t addr, uint32_t& value);
+MemoryError read32(uint32_t addr, uint32_t& value);
+
+MemoryError Memory::write8(uint32_t addr, uint8_t val) {
+
+    if (!valid_address(addr, 1))
+        return MemoryError::AccessFault;
+
     RAM[translate(addr)] = val;
+
+    return MemoryError::None;
+
 }
 
-void Memory::write16(uint16_t val, uint32_t addr) {
+MemoryError Memory::write16(uint32_t addr, uint16_t val) {
+
+    if (addr % 2 != 0)
+        return MemoryError::Misaligned;
+
+    if (!valid_address(addr, 2))
+        return MemoryError::AccessFault;
+
     memcpy(&RAM[translate(addr)], &val, sizeof(val));
+
+    return MemoryError::None;
+
 }
-void Memory::write32(uint32_t val, uint32_t addr) {
+
+MemoryError Memory::write32(uint32_t addr, uint32_t val) {
+
+    if (addr % 4 != 0)
+        return MemoryError::Misaligned;
+
+    if (!valid_address(addr, 4))
+        return MemoryError::AccessFault;
+
     memcpy(&RAM[translate(addr)], &val, sizeof(val));
+
+    return MemoryError::None;
+
 }
 
-uint8_t Memory::read8(uint32_t addr) {
-    return RAM[translate(addr)];
+MemoryError Memory::read8(uint32_t addr, uint32_t& value) {
+
+    if (!valid_address(addr, 1))
+        return MemoryError::AccessFault;
+
+    value = RAM[translate(addr)];
+
+    return MemoryError::None;
 }
 
-uint16_t Memory::read16(uint32_t addr) {
-    uint16_t temp;
-    memcpy(&temp, &RAM[translate(addr)], sizeof(temp));
-    return temp;
+MemoryError Memory::read16(uint32_t addr, uint32_t& value) {
+
+    if(addr % 2 != 0)
+        return MemoryError::Misaligned;
+
+    if (!valid_address(addr, 2))
+        return MemoryError::AccessFault;
+
+    
+    memcpy(&value, &RAM[translate(addr)], sizeof(uint16_t));
+
+    return MemoryError::None;
 }
 
-uint32_t Memory::read32(uint32_t addr) {
-    uint32_t temp;
-    memcpy(&temp, &RAM[translate(addr)], sizeof(temp));
-    return temp;
+MemoryError Memory::read32(uint32_t addr, uint32_t& value) {
+
+    if (addr % 4 != 0)
+        return MemoryError::Misaligned;
+
+    if (!valid_address(addr, 4))
+        return MemoryError::AccessFault;
+
+
+    memcpy(&value, &RAM[translate(addr)], sizeof(value));
+
+    return MemoryError::None;
 }
 
-//constexpr auto out_of_bounds = 0x1;
-//constexpr auto miss_aligned_trap = 0x2;
+
 
 Decoded_instruction decode_ins(uint32_t ins) {
     Decoded_instruction d{};

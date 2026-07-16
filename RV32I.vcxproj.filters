@@ -95,5 +95,8 @@
     <ClInclude Include="src\CPU\CSR.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\CPU\Trap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
