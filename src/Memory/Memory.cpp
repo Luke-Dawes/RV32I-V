@@ -22,10 +22,6 @@ inline uint32_t Memory::translate(uint32_t addr)
 }
 
 
-MemoryError read8(uint32_t addr, uint32_t& value);
-MemoryError read16(uint32_t addr, uint32_t& value);
-MemoryError read32(uint32_t addr, uint32_t& value);
-
 MemoryError Memory::write8(uint32_t addr, uint8_t val) {
 
     if (!valid_address(addr, 1))
@@ -39,7 +35,7 @@ MemoryError Memory::write8(uint32_t addr, uint8_t val) {
 
 MemoryError Memory::write16(uint32_t addr, uint16_t val) {
 
-    if (addr % 2 != 0)
+    if (addr & 1)
         return MemoryError::Misaligned;
 
     if (!valid_address(addr, 2))
@@ -53,7 +49,7 @@ MemoryError Memory::write16(uint32_t addr, uint16_t val) {
 
 MemoryError Memory::write32(uint32_t addr, uint32_t val) {
 
-    if (addr % 4 != 0)
+    if (addr & 3)
         return MemoryError::Misaligned;
 
     if (!valid_address(addr, 4))
@@ -77,7 +73,7 @@ MemoryError Memory::read8(uint32_t addr, uint32_t& value) {
 
 MemoryError Memory::read16(uint32_t addr, uint32_t& value) {
 
-    if(addr % 2 != 0)
+    if(addr & 1)
         return MemoryError::Misaligned;
 
     if (!valid_address(addr, 2))
@@ -91,7 +87,7 @@ MemoryError Memory::read16(uint32_t addr, uint32_t& value) {
 
 MemoryError Memory::read32(uint32_t addr, uint32_t& value) {
 
-    if (addr % 4 != 0)
+    if (addr & 3)
         return MemoryError::Misaligned;
 
     if (!valid_address(addr, 4))

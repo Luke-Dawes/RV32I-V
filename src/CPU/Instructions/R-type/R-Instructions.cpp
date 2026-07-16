@@ -1,85 +1,100 @@
 #include "R-Instructions.h"
 #include "../../CPU.h"
 #include "../../../Memory/Memory.h"
+#include "../../Trap.h"
 
-void add(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> add(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] + cpu.registers[ins.rs2];
+	return std::nullopt;
 }
 
-void sub(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> sub(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] - cpu.registers[ins.rs2];
+	return std::nullopt;
 }
 
-void _xor(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> _xor(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] ^ cpu.registers[ins.rs2];
+	return std::nullopt;
 }
 
-void _or(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> _or(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] | cpu.registers[ins.rs2];
+	return std::nullopt;
 }
 
-void _and(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> _and(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] & cpu.registers[ins.rs2];
+	return std::nullopt;
 }
 
-void sll(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> sll(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] << (cpu.registers[ins.rs2] & 0x1F);
+	return std::nullopt;
 }
 
-void srl(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> srl(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] >> (cpu.registers[ins.rs2] & 0x1F);
+	return std::nullopt;
 }
 
 //if the number is negative it the empty slots created by shifting are filled with 1s.
-void sra(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> sra(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = static_cast<int32_t>(cpu.registers[ins.rs1]) >> (cpu.registers[ins.rs2] & 0x1F);
+	return std::nullopt;
 }
 
 //signed comparison
-void slt(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> slt(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = (static_cast<int32_t>(cpu.registers[ins.rs1]) < static_cast<int32_t>(cpu.registers[ins.rs2])) ? 1 : 0;
+	return std::nullopt;
 }
 
 //unsigned comparision
-void sltu(CPU& cpu, Decoded_instruction& ins) { //theres a note of zero-extends - no sign 
+std::optional<Trap> sltu(CPU& cpu, const Decoded_instruction& ins) { //theres a note of zero-extends - no sign 
 	if (ins.rd != 0) cpu.registers[ins.rd] = (cpu.registers[ins.rs1] < cpu.registers[ins.rs2]) ? 1 : 0;
+	return std::nullopt;
 }
 
 
 //m extension 
 
-void mul(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> mul(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = static_cast<uint32_t>((uint64_t)cpu.registers[ins.rs1] * (uint64_t)cpu.registers[ins.rs2]);
+	return std::nullopt;
 }
 
-void mulh(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> mulh(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) {
 		int64_t a = (int64_t)(int32_t)cpu.registers[ins.rs1];
 		int64_t b = (int64_t)(int32_t)cpu.registers[ins.rs2];
 
 		cpu.registers[ins.rd] = (uint32_t)((a * b) >> 32);
 	}
+	return std::nullopt;
 }
 
-void mulhsu(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> mulhsu(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) {
 		int64_t a = (int64_t)(int32_t)cpu.registers[ins.rs1];
 		
 		cpu.registers[ins.rd] = (uint32_t)((a * cpu.registers[ins.rs2]) >> 32);
 	}
+	return std::nullopt;
 }
 
 
-void mulhu(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> mulhu(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = static_cast<uint32_t>(((uint64_t)cpu.registers[ins.rs1] * (uint64_t)cpu.registers[ins.rs2]) >> 32);
+	return std::nullopt;
 }
 
-void div(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> div(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) {
 		
 		if (cpu.registers[ins.rs2] == 0) {
 			cpu.registers[ins.rd] = 0xFFFFFFFFu; 
-			return;
+			return; #########################################################
 		}
 
 		if ((int32_t)cpu.registers[ins.rs1] == INT32_MIN && (int32_t)cpu.registers[ins.rs2] == -1) {
@@ -89,24 +104,26 @@ void div(CPU& cpu, Decoded_instruction& ins) {
 
 		cpu.registers[ins.rd] = static_cast<uint32_t>((int32_t)cpu.registers[ins.rs1] / (int32_t)cpu.registers[ins.rs2]);
 	}
+	return std::nullopt;
 }
 
-void divu(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> divu(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) {
 		if (cpu.registers[ins.rs2] == 0) {
 			cpu.registers[ins.rd] = 0xFFFFFFFFu; 
-			return;
+			return; ##############################################################
 		}
 
 		cpu.registers[ins.rd] = cpu.registers[ins.rs1] / cpu.registers[ins.rs2];
 	}
+	return std::nullopt;
 }
 
-void rem(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> rem(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) {
 		if (cpu.registers[ins.rs2] == 0) {
 			cpu.registers[ins.rd] = cpu.registers[ins.rs1]; 
-			return;
+			return; #####################################################################
 		}
 
 		if ((int32_t)cpu.registers[ins.rs1] == INT32_MIN && (int32_t)cpu.registers[ins.rs2] == -1) {
@@ -117,9 +134,10 @@ void rem(CPU& cpu, Decoded_instruction& ins) {
 
 		cpu.registers[ins.rd] = (int32_t)cpu.registers[ins.rs1] % (int32_t)cpu.registers[ins.rs2];
 	}
+	return std::nullopt;
 }
 
-void remu(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> remu(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) {
 		if (cpu.registers[ins.rs2] == 0) {
 			cpu.registers[ins.rd] = cpu.registers[ins.rs1];
@@ -128,4 +146,5 @@ void remu(CPU& cpu, Decoded_instruction& ins) {
 
 		cpu.registers[ins.rd] = cpu.registers[ins.rs1] % cpu.registers[ins.rs2];
 	}
+	return std::nullopt;
 }

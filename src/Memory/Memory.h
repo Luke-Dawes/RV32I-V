@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <unordered_map>
 #include <string>
+#include "../CPU/Trap.h"
 //#include "CPU.h"
 
 class CPU;
@@ -83,11 +84,7 @@ struct Decoded_instruction {
 
 Decoded_instruction decode_ins(uint32_t PC);
 
-
-
-
-
-typedef void (*InstructionFunc)(CPU& cpu, Decoded_instruction& ins);
+using InstructionFunc = std::optional<Trap>(*)(CPU& cpu, const Decoded_instruction& ins);
 
 extern InstructionFunc Instructions[];
 inline std::unordered_map<uint32_t, std::string> instruction_debug_table;

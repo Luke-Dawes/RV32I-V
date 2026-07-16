@@ -3,23 +3,24 @@
 #include "../../../Memory/Memory.h"
 
 
-void sb(CPU& cpu, Decoded_instruction& ins) {
-	cpu.memory.write8(cpu.registers[ins.rs1] + ins.imm, cpu.registers[ins.rs2] & 0xFF);
+std::optional<Trap> sb(CPU& cpu, const Decoded_instruction& ins) {
+	cpu.memory.write8(cpu.registers[ins.rs1] + ins.imm, cpu.registers[ins.rs2] & 0xFF); ##############################
+	return std::nullopt;
 }
 
-void sh(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> sh(CPU& cpu, const Decoded_instruction& ins) {
 	uint32_t addr = cpu.registers[ins.rs1] + ins.imm;
 
 	uint16_t value = cpu.registers[ins.rs2];
 
-	cpu.memory.write16(addr, value);
-
+	cpu.memory.write16(addr, value); ##################################
+	return std::nullopt;
 }
-void sw(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> sw(CPU& cpu, const Decoded_instruction& ins) {
 	uint32_t addr = cpu.registers[ins.rs1] + ins.imm;
 
 	int32_t value = cpu.registers[ins.rs2];
 
-	cpu.memory.write32(addr, value);
-
+	cpu.memory.write32(addr, value); #################
+	return std::nullopt;
 }

@@ -1,22 +1,22 @@
 #pragma once
+#include <optional>
 
 
 class CPU;
 struct Decoded_instruction;
-
-
+struct Trap;
 
 // ----- B type ----------
-void beq(CPU& cpu, Decoded_instruction& ins);
-void bne(CPU& cpu, Decoded_instruction& ins);
-void blt(CPU& cpu, Decoded_instruction& ins);
-void bge(CPU& cpu, Decoded_instruction& ins);
-void bltu(CPU& cpu, Decoded_instruction& ins);
-void bgeu(CPU& cpu, Decoded_instruction& ins);
+std::optional<Trap> beq(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> bne(CPU& cpu, const  Decoded_instruction& ins);
+std::optional<Trap> blt(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> bge(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> bltu(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> bgeu(CPU& cpu, const Decoded_instruction& ins);
 
 // ----- J type ----------
-void jal(CPU& cpu, Decoded_instruction& ins);
+std::optional<Trap> jal(CPU& cpu, const Decoded_instruction& ins);
 
 // ----- U type ----------
-void lui(CPU& cpu, Decoded_instruction& ins);
-void auipc(CPU& cpu, Decoded_instruction& ins);
+std::optional<Trap> lui(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> auipc(CPU& cpu, const Decoded_instruction& ins);

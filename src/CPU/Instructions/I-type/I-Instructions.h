@@ -1,36 +1,38 @@
 #pragma once
 #include <cstdint>
+#include <optional>
 
 class CPU;
 struct Decoded_instruction;
+struct Trap;
 
 
 
-void addi(CPU& cpu, Decoded_instruction& ins);
-void xori(CPU& cpu, Decoded_instruction& ins);
-void ori(CPU& cpu, Decoded_instruction& ins);
-void andi(CPU& cpu, Decoded_instruction& ins);
-void slli(CPU& cpu, Decoded_instruction& ins);
-void srli(CPU& cpu, Decoded_instruction& ins);
-void srai(CPU& cpu, Decoded_instruction& ins);
-void slti(CPU& cpu, Decoded_instruction& ins);
-void sltiu(CPU& cpu, Decoded_instruction& ins);
+std::optional<Trap> addi(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> xori(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> ori(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> andi(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> slli(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> srli(CPU& cpu, const  Decoded_instruction& ins);
+std::optional<Trap> srai(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> slti(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> sltiu(CPU& cpu, const Decoded_instruction& ins);
 
 
-void lb(CPU& cpu, Decoded_instruction& ins);
-void lh(CPU& cpu, Decoded_instruction& ins);
-void lw(CPU& cpu, Decoded_instruction& ins);
-void lbu(CPU& cpu, Decoded_instruction& ins);
-void lhu(CPU& cpu, Decoded_instruction& ins);
+std::optional<Trap> lb(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> lh(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> lw(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> lbu(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> lhu(CPU& cpu, const Decoded_instruction& ins);
 
-void jalr(CPU& cpu, Decoded_instruction& ins);
+std::optional<Trap> jalr(CPU& cpu, const  Decoded_instruction& ins);
 
-void system(CPU& cpu, Decoded_instruction& ins);
+std::optional<Trap> system(CPU& cpu, const Decoded_instruction& ins);
 
-void csrrw(CPU& cpu, Decoded_instruction& ins);
-void csrrs(CPU& cpu, Decoded_instruction& ins);
-void csrrc(CPU& cpu, Decoded_instruction& ins);
-void csrrwi(CPU& cpu, Decoded_instruction& ins);
-void csrrsi(CPU& cpu, Decoded_instruction& ins);
-void csrrci(CPU& cpu, Decoded_instruction& ins);
+std::optional<Trap> csrrw(CPU& cpu, const  Decoded_instruction& ins);
+std::optional<Trap> csrrs(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> csrrc(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> csrrwi(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> csrrsi(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> csrrci(CPU& cpu, const Decoded_instruction& ins);
 

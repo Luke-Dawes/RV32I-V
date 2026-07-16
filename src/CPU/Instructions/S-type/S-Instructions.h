@@ -1,9 +1,11 @@
 #pragma once
 #include <cstdint>
+#include <optional>
 
 class CPU;
 struct Decoded_instruction;
+struct Trap;
 
-void sb(CPU& cpu, Decoded_instruction& ins);
-void sh(CPU& cpu, Decoded_instruction& ins);
-void sw(CPU& cpu, Decoded_instruction& ins);
+std::optional<Trap> sb(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> sh(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> sw(CPU& cpu, const Decoded_instruction& ins);

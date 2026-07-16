@@ -2,97 +2,97 @@
 #include "../../CPU.h"
 #include "../../../Memory/Memory.h"
 #include "../../CSR.h"
+#include "../../Trap.h"
 #include <iostream>
 
-/*inline int32_t sixteen_to_thirtytwo(uint16_t ins.imm) {
-	return (static_cast<int32_t>(ins.imm) << 20) >> 20;
-}
-*/
 
-void addi(CPU& cpu, Decoded_instruction& ins) {
 
-	std::cout << "ADDI "
-		<< "rd=x" << ins.rd
-		<< " rs1=x" << ins.rs1
-		<< " rs1_val=0x" << std::hex << cpu.registers[ins.rs1]
-		<< " imm=0x" << ins.imm
-		<< std::dec << "\n";
-
+std::optional<Trap> addi(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] + ins.imm;
+	return std::nullopt;
 }
 
-void xori(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> xori(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] ^ ins.imm;
+	return std::nullopt;
 }
 
-void ori(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> ori(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] | ins.imm;
+	return std::nullopt;
 }
 
-void andi(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> andi(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] & ins.imm;
+	return std::nullopt;
 }
 
-void slli(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> slli(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] << (ins.imm & 0x1F);
+	return std::nullopt;
 }
 
-void srli(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> srli(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) cpu.registers[ins.rd] = cpu.registers[ins.rs1] >> (ins.imm & 0x1F);
+	return std::nullopt;
 }
 
-void srai(CPU& cpu, Decoded_instruction& ins) { //msb extends - signed
+std::optional<Trap> srai(CPU& cpu, const Decoded_instruction& ins) { //msb extends - signed
 	if (ins.rd != 0) cpu.registers[ins.rd] = static_cast<int32_t>(cpu.registers[ins.rs1]) >> (ins.imm & 0x1F);
+	return std::nullopt;
 }
 
-void slti(CPU& cpu, Decoded_instruction& ins) { //signed
+std::optional<Trap> slti(CPU& cpu, const Decoded_instruction& ins) { //signed
 	if (ins.rd != 0) cpu.registers[ins.rd] = (static_cast<int32_t>(cpu.registers[ins.rs1]) < ins.imm) ? 1 : 0;
+	return std::nullopt;
 }
 
-void sltiu(CPU& cpu, Decoded_instruction& ins) { //unsigned
+std::optional<Trap> sltiu(CPU& cpu, const Decoded_instruction& ins) { //unsigned
 	if (ins.rd != 0) cpu.registers[ins.rd] = (cpu.registers[ins.rs1] < static_cast<uint32_t>(ins.imm)) ? 1 : 0;
+	return std::nullopt;
 }
 
 
-void lb(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> lb(CPU& cpu, const Decoded_instruction& ins) { this needs to change
 	if (ins.rd != 0) {
-		cpu.registers[ins.rd] = static_cast<int32_t>(static_cast<int8_t>(cpu.memory.read8(cpu.registers[ins.rs1] + ins.imm)));
+		cpu.registers[ins.rd] = static_cast<int32_t>(static_cast<int8_t>(cpu.memory.read8(cpu.registers[ins.rs1] + ins.imm))); #========================================================================================================
 	}
 }
 
 //signed
-void lh(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> lh(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) {
-		int32_t val = cpu.memory.read16(cpu.registers[ins.rs1] + ins.imm);
+		int32_t val = cpu.memory.read16(cpu.registers[ins.rs1] + ins.imm); ###################
 		cpu.registers[ins.rd] = (val << 16) >> 16;
 	}
 }
 //signed
-void lw(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> lw(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) {
-		cpu.registers[ins.rd] = static_cast<int32_t>(cpu.memory.read32(cpu.registers[ins.rs1] + ins.imm));
+		cpu.registers[ins.rd] = static_cast<int32_t>(cpu.memory.read32(cpu.registers[ins.rs1] + ins.imm)); ###############
 	}
 }
 //unsigned
-void lbu(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> lbu(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) {
-		cpu.registers[ins.rd] = static_cast<uint32_t>(cpu.memory.read8(cpu.registers[ins.rs1] + ins.imm));
+		cpu.registers[ins.rd] = static_cast<uint32_t>(cpu.memory.read8(cpu.registers[ins.rs1] + ins.imm)); ##########
 	}
 }
 
-void lhu(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> lhu(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) {
-		cpu.registers[ins.rd] = static_cast<uint32_t>(cpu.memory.read16(cpu.registers[ins.rs1] + ins.imm));
+		cpu.registers[ins.rd] = static_cast<uint32_t>(cpu.memory.read16(cpu.registers[ins.rs1] + ins.imm)); #############
 	}
 }
 
 
-void jalr(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> jalr(CPU& cpu, const Decoded_instruction& ins) {
 	cpu.registers[ins.rd] = cpu.PC + 4;
 	cpu.PC = cpu.registers[ins.rs1] + ins.imm;
+	return std::nullopt;
 }
 
-void system(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> system(CPU& cpu, const Decoded_instruction& ins) { ##################
 	switch (ins.imm)
 	{
 	case 0x000: // ECALL
@@ -117,7 +117,7 @@ void system(CPU& cpu, Decoded_instruction& ins) {
 	}
 }
 
-void csrrw(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> csrrw(CPU& cpu, const Decoded_instruction& ins) {
 
 	uint32_t old = cpu.csrs.read(ins.csr);
 
@@ -126,9 +126,10 @@ void csrrw(CPU& cpu, Decoded_instruction& ins) {
 	}
 
 	cpu.csrs.write(ins.csr, cpu.registers[ins.rs1]);
+	return std::nullopt;
 }
 
-void csrrs(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> csrrs(CPU& cpu, const Decoded_instruction& ins) {
 
 	uint32_t old = cpu.csrs.read(ins.csr);
 
@@ -137,10 +138,11 @@ void csrrs(CPU& cpu, Decoded_instruction& ins) {
 
 	if (ins.rs1 != 0)
 		cpu.csrs.write(ins.csr, old | cpu.registers[ins.rs1]);
+	return std::nullopt;
 
 }
 
-void csrrc(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> csrrc(CPU& cpu, const Decoded_instruction& ins) {
 	uint32_t old = cpu.csrs.read(ins.csr);
 
 	if (ins.rd != 0)
@@ -148,18 +150,20 @@ void csrrc(CPU& cpu, Decoded_instruction& ins) {
 
 	if (ins.rs1 != 0)
 		cpu.csrs.write(ins.csr, old & ~cpu.registers[ins.rs1]);
+	return std::nullopt;
 }
 
-void csrrwi(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> csrrwi(CPU& cpu, const Decoded_instruction& ins) {
 	uint32_t old = cpu.csrs.read(ins.csr);
 
 	if (ins.rd != 0)
 		cpu.registers[ins.rd] = old;
 
 	cpu.csrs.write(ins.csr, ins.imm & 0x1F);
+	return std::nullopt;
 }
 
-void csrrsi(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> csrrsi(CPU& cpu, const Decoded_instruction& ins) {
 
 	uint32_t old = cpu.csrs.read(ins.csr);
 
@@ -170,9 +174,10 @@ void csrrsi(CPU& cpu, Decoded_instruction& ins) {
 
 	if (new_imm != 0)
 		cpu.csrs.write(ins.csr, old | new_imm);
+	return std::nullopt;
 
 }
-void csrrci(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> csrrci(CPU& cpu, const Decoded_instruction& ins) {
 
 	uint32_t old = cpu.csrs.read(ins.csr);
 
@@ -183,4 +188,5 @@ void csrrci(CPU& cpu, Decoded_instruction& ins) {
 
 	if (new_imm != 0)
 		cpu.csrs.write(ins.csr, old & ~new_imm);
+	return std::nullopt;
 }

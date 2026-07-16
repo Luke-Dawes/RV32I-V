@@ -2,6 +2,39 @@
 #include <cstdint>
 #include <variant>
 
+enum class ExceptionCause : uint32_t
+{
+    InstructionAddressMisaligned = 0,
+    InstructionAccessFault = 1,
+    IllegalInstruction = 2,
+    Breakpoint = 3,
+    LoadAddressMisaligned = 4,
+    LoadAccessFault = 5,
+    StoreAddressMisaligned = 6,
+    StoreAccessFault = 7,
+    EnvironmentCallFromUMode = 8,
+    EnvironmentCallFromSMode = 9,
+    EnvironmentCallFromMMode = 11,
+    InstructionPageFault = 12,
+    LoadPageFault = 13,
+    StorePageFault = 15
+};
+
+enum class InterruptCause : uint32_t
+{
+    UserSoftware = 0,
+    SupervisorSoftware = 1,
+    MachineSoftware = 3,
+
+    UserTimer = 4,
+    SupervisorTimer = 5,
+    MachineTimer = 7,
+
+    UserExternal = 8,
+    SupervisorExternal = 9,
+    MachineExternal = 11
+};
+
 enum trap_type {
 	Exception, interrupt
 };
@@ -121,35 +154,3 @@ struct Trap {
     }
 };
 
-enum class ExceptionCause : uint32_t
-{
-    InstructionAddressMisaligned = 0,
-    InstructionAccessFault = 1,
-    IllegalInstruction = 2,
-    Breakpoint = 3,
-    LoadAddressMisaligned = 4,
-    LoadAccessFault = 5,
-    StoreAddressMisaligned = 6,
-    StoreAccessFault = 7,
-    EnvironmentCallFromUMode = 8,
-    EnvironmentCallFromSMode = 9,
-    EnvironmentCallFromMMode = 11,
-    InstructionPageFault = 12,
-    LoadPageFault = 13,
-    StorePageFault = 15
-};
-
-enum class InterruptCause : uint32_t
-{
-    UserSoftware = 0,
-    SupervisorSoftware = 1,
-    MachineSoftware = 3,
-
-    UserTimer = 4,
-    SupervisorTimer = 5,
-    MachineTimer = 7,
-
-    UserExternal = 8,
-    SupervisorExternal = 9,
-    MachineExternal = 11
-};

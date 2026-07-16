@@ -38,6 +38,8 @@ public:
 	CSR csrs;
 	Privilage_mode mode;
 
+
+
 private:
 
 	fetched_result fetch();

@@ -1,25 +1,27 @@
 #pragma once
 #include <cstdint>
+#include <optional>
 
 class CPU;
 struct Decoded_instruction;
+struct Trap;
 
-void add(CPU& cpu, Decoded_instruction& ins);
-void sub(CPU& cpu, Decoded_instruction& ins);
-void _xor(CPU& cpu, Decoded_instruction& ins);
-void _or(CPU& cpu, Decoded_instruction& ins);
-void _and(CPU& cpu, Decoded_instruction& ins);
-void sll(CPU& cpu, Decoded_instruction& ins);
-void srl(CPU& cpu, Decoded_instruction& ins);
-void sra(CPU& cpu, Decoded_instruction& ins);
-void slt(CPU& cpu, Decoded_instruction& ins);
-void sltu(CPU& cpu, Decoded_instruction& ins);
+std::optional<Trap> add(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> sub(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> _xor(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> _or(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> _and(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> sll(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> srl(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> sra(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> slt(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> sltu(CPU& cpu, const Decoded_instruction& ins);
 
-void mul(CPU& cpu, Decoded_instruction& ins);
-void mulh(CPU& cpu, Decoded_instruction& ins);
-void mulhsu(CPU& cpu, Decoded_instruction& ins);
-void mulhu(CPU& cpu, Decoded_instruction& ins);
-void div(CPU& cpu, Decoded_instruction& ins);
-void divu(CPU& cpu, Decoded_instruction& ins);
-void rem(CPU& cpu, Decoded_instruction& ins);
-void remu(CPU& cpu, Decoded_instruction& ins);
+std::optional<Trap> mul(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> mulh(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> mulhsu(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> mulhu(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> div(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> divu(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> rem(CPU& cpu, const Decoded_instruction& ins);
+std::optional<Trap> remu(CPU& cpu, const Decoded_instruction& ins);
