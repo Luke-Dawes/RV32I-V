@@ -53,67 +53,116 @@ std::optional<Trap> sltiu(CPU& cpu, const Decoded_instruction& ins) { //unsigned
 }
 
 
-std::optional<Trap> lb(CPU& cpu, const Decoded_instruction& ins) { this needs to change
-	if (ins.rd != 0) {
-		cpu.registers[ins.rd] = static_cast<int32_t>(static_cast<int8_t>(cpu.memory.read8(cpu.registers[ins.rs1] + ins.imm))); #========================================================================================================
-	}
+std::optional<Trap> lb(CPU& cpu, const Decoded_instruction& ins) { 
+	uint32_t value;
+
+	uint32_t address = cpu.registers[ins.rs1] + ins.imm;
+
+	if (auto trap = cpu.load32(address, value))
+		return trap;
+
+	if (ins.rd != 0)
+		cpu.registers[ins.rd] = value;
+
+	return std::nullopt;
 }
 
 //signed
 std::optional<Trap> lh(CPU& cpu, const Decoded_instruction& ins) {
-	if (ins.rd != 0) {
-		int32_t val = cpu.memory.read16(cpu.registers[ins.rs1] + ins.imm); ###################
-		cpu.registers[ins.rd] = (val << 16) >> 16;
-	}
+	uint16_t value;
+
+	uint32_t address = cpu.registers[ins.rs1] + ins.imm;
+
+	if (auto trap = cpu.load16(address, value))
+		return trap;
+
+	if (ins.rd != 0)
+		cpu.registers[ins.rd] = static_cast<int32_t>(static_cast<int16_t>(value));
+
+	return std::nullopt;
 }
 //signed
 std::optional<Trap> lw(CPU& cpu, const Decoded_instruction& ins) {
-	if (ins.rd != 0) {
-		cpu.registers[ins.rd] = static_cast<int32_t>(cpu.memory.read32(cpu.registers[ins.rs1] + ins.imm)); ###############
-	}
+	uint32_t value;
+
+	uint32_t address = cpu.registers[ins.rs1] + ins.imm;
+
+	if (auto trap = cpu.load32(address, value))
+		return trap;
+
+	if (ins.rd != 0)
+		cpu.registers[ins.rd] = value;
+
+	return std::nullopt;
 }
 //unsigned
 std::optional<Trap> lbu(CPU& cpu, const Decoded_instruction& ins) {
-	if (ins.rd != 0) {
-		cpu.registers[ins.rd] = static_cast<uint32_t>(cpu.memory.read8(cpu.registers[ins.rs1] + ins.imm)); ##########
-	}
+	uint8_t value;
+
+	uint32_t address = cpu.registers[ins.rs1] + ins.imm;
+
+	if (auto trap = cpu.load8(address, value))
+		return trap;
+
+	if (ins.rd != 0)
+		cpu.registers[ins.rd] = value;
+
+	return std::nullopt;
 }
 
 std::optional<Trap> lhu(CPU& cpu, const Decoded_instruction& ins) {
-	if (ins.rd != 0) {
-		cpu.registers[ins.rd] = static_cast<uint32_t>(cpu.memory.read16(cpu.registers[ins.rs1] + ins.imm)); #############
-	}
+	uint16_t value;
+
+	uint32_t address = cpu.registers[ins.rs1] + ins.imm;
+
+	if (auto trap = cpu.load16(address, value))
+		return trap;
+
+	if (ins.rd != 0)
+		cpu.registers[ins.rd] = value;
+
+	return std::nullopt;
 }
 
 
 std::optional<Trap> jalr(CPU& cpu, const Decoded_instruction& ins) {
-	cpu.registers[ins.rd] = cpu.PC + 4;
-	cpu.PC = cpu.registers[ins.rs1] + ins.imm;
+	
+	uint32_t target = cpu.registers[ins.rs1] + ins.imm;
+
+	target &= ~1;
+
+	if (target & 3)
+		return Trap::InstructionAddressMisaligned(target);
+
+	if (ins.rd != 0)
+		cpu.registers[ins.rd] = cpu.PC + 4;
+
+	cpu.PC = target;
+
 	return std::nullopt;
 }
 
-std::optional<Trap> system(CPU& cpu, const Decoded_instruction& ins) { ##################
+std::optional<Trap> system(CPU& cpu, const Decoded_instruction& ins) {
 	switch (ins.imm)
 	{
 	case 0x000: // ECALL
-		cpu.raise_trap(11, 0);
-		break;
+		return Trap::EcallM();
 
 	case 0x001: // EBREAK
-		cpu.raise_trap(3, 0);
-		break;
+		return Trap::Breakpoint();
+		
 
 	case 0x302: // MRET
 		cpu.PC = cpu.csrs.read(CSR_LOCATIONS::MEPC);
-		break;
+		return std::nullopt;
+
 
 	case 0x105: // WFI
 		// Can be a no-op for now.
-		break;
+		return std::nullopt;
 
 	default:
-		cpu.raise_trap(2, ins.full); // Illegal instruction
-		break;
+		return Trap::IllegalInstruction(ins.full);
 	}
 }
 

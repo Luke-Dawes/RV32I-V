@@ -69,7 +69,7 @@ void test_sb(CPU& cpu)
 	sb(cpu, d); //register[rs1] + imm for the location, register[rs2] for data
 	//should store it at the 10th ram address
 
-	assert(cpu.memory.read8(10) == 6 && "loading 6 into ram addess 10 on test_sb failed");
+	assert(cpu.memory.debug_read8(10) == 6 && "loading 6 into ram addess 10 on test_sb failed");
 }
 
 void test_sh(CPU& cpu) {
@@ -85,8 +85,8 @@ void test_sh(CPU& cpu) {
 
 	uint32_t addr = 20;
 
-	assert(cpu.memory.read8(addr) == 0x22 && "test_sh failed first byte");
-	assert(cpu.memory.read8(addr + 1) == 0x11 && "test_sh failed second byte");
+	assert(cpu.memory.debug_read8(addr) == 0x22 && "test_sh failed first byte");
+	assert(cpu.memory.debug_read8(addr + 1) == 0x11 && "test_sh failed second byte");
 }
 
 void test_sw(CPU& cpu) {
@@ -102,10 +102,10 @@ void test_sw(CPU& cpu) {
 
 	uint32_t addr = 20;
 
-	assert(cpu.memory.read8(addr) == 0x44 && "test_sh failed first byte");
-	assert(cpu.memory.read8(addr + 1) == 0x33 && "test_sh failed second byte");
-	assert(cpu.memory.read8(addr + 2) == 0x22 && "test_sh failed third byte");
-	assert(cpu.memory.read8(addr + 3) == 0x11 && "test_sh failed fourth byte");
+	assert(cpu.memory.debug_read8(addr) == 0x44 && "test_sh failed first byte");
+	assert(cpu.memory.debug_read8(addr + 1) == 0x33 && "test_sh failed second byte");
+	assert(cpu.memory.debug_read8(addr + 2) == 0x22 && "test_sh failed third byte");
+	assert(cpu.memory.debug_read8(addr + 3) == 0x11 && "test_sh failed fourth byte");
 }
 
 // ------------- R-type ----------------------------------

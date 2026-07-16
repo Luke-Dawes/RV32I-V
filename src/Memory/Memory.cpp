@@ -61,7 +61,7 @@ MemoryError Memory::write32(uint32_t addr, uint32_t val) {
 
 }
 
-MemoryError Memory::read8(uint32_t addr, uint32_t& value) {
+MemoryError Memory::read8(uint32_t addr, uint8_t& value) {
 
     if (!valid_address(addr, 1))
         return MemoryError::AccessFault;
@@ -71,7 +71,7 @@ MemoryError Memory::read8(uint32_t addr, uint32_t& value) {
     return MemoryError::None;
 }
 
-MemoryError Memory::read16(uint32_t addr, uint32_t& value) {
+MemoryError Memory::read16(uint32_t addr, uint16_t& value) {
 
     if(addr & 1)
         return MemoryError::Misaligned;
@@ -99,6 +99,10 @@ MemoryError Memory::read32(uint32_t addr, uint32_t& value) {
     return MemoryError::None;
 }
 
+uint8_t Memory::debug_read8(uint32_t addr)
+{
+    return RAM[translate(addr)];
+}
 
 
 Decoded_instruction decode_ins(uint32_t ins) {

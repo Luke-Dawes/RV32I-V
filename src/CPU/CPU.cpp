@@ -21,7 +21,25 @@ fetched_result CPU::fetch() {
 		return result;
 	}
 	
-	result.instruction = memory.read32(PC);
+	uint32_t value = 0;
+	MemoryError error = memory.read32(PC, value);
+
+	switch (error) 
+	{
+	case MemoryError::None:
+		result.instruction = value;
+		break;
+
+	case MemoryError::Misaligned:
+		result.trap = Trap::InstructionAddressMisaligned(PC);
+		break;
+
+	case MemoryError::AccessFault:
+		result.trap = Trap::InstructionAccessFault(PC);
+		break;
+	
+	}
+
 		
 	return result;
 }
@@ -48,7 +66,7 @@ std::optional<Trap> CPU::execute(Decoded_instruction d) {
 			std::cout << "instruction found in instruction table but not map";
 		}
 
-		Instructions[key](*this, d);
+		return Instructions[key](*this, d);
 	}
 	else {
 		std::cout << "unknown instruction, key=" << key << "\n";
@@ -96,4 +114,106 @@ void CPU::enter_trap(const Trap& trap) {
 	csrs.write(CSR_LOCATIONS::MTVAL, trap.tval);
 
 	PC = csrs.read(CSR_LOCATIONS::MTVEC) & ~0x3;
+}
+
+std::optional<Trap> CPU::load8(uint32_t address, uint8_t& value)
+{
+	switch (memory.read8(address, value))
+	{
+	case MemoryError::None:
+		return std::nullopt;
+
+	case MemoryError::AccessFault:
+		return Trap::LoadAccessFault(address);
+
+	case MemoryError::Misaligned:
+		return Trap::LoadMisaligned(address);
+	}
+
+	return std::nullopt;
+}
+
+std::optional<Trap> CPU::load16(uint32_t address, uint16_t& value)
+{
+	switch (memory.read16(address, value))
+	{
+	case MemoryError::None:
+		return std::nullopt;
+
+	case MemoryError::AccessFault:
+		return Trap::LoadAccessFault(address);
+
+	case MemoryError::Misaligned:
+		return Trap::LoadMisaligned(address);
+	}
+
+	return std::nullopt;
+}
+
+std::optional<Trap> CPU::load32(uint32_t address, uint32_t& value)
+{
+	switch (memory.read32(address, value))
+	{
+	case MemoryError::None:
+		return std::nullopt;
+
+	case MemoryError::AccessFault:
+		return Trap::LoadAccessFault(address);
+
+	case MemoryError::Misaligned:
+		return Trap::LoadMisaligned(address);
+	}
+
+	return std::nullopt;
+}
+
+std::optional<Trap> CPU::store8(uint32_t address, uint8_t value)
+{
+	switch (memory.write8(address, value))
+	{
+	case MemoryError::None:
+		return std::nullopt;
+
+	case MemoryError::AccessFault:
+		return Trap::StoreAccessFault(address);
+
+	case MemoryError::Misaligned:
+		return Trap::StoreMisaligned(address);
+	}
+
+	return std::nullopt;
+}
+
+std::optional<Trap> CPU::store16(uint32_t address, uint16_t value)
+{
+	switch (memory.write16(address, value))
+	{
+	case MemoryError::None:
+		return std::nullopt;
+
+	case MemoryError::AccessFault:
+		return Trap::StoreAccessFault(address);
+
+	case MemoryError::Misaligned:
+		return Trap::StoreMisaligned(address);
+	}
+
+	return std::nullopt;
+}
+
+std::optional<Trap> CPU::store32(uint32_t address, uint32_t value)
+{
+	switch (memory.write32(address, value))
+	{
+	case MemoryError::None:
+		return std::nullopt;
+
+	case MemoryError::AccessFault:
+		return Trap::StoreAccessFault(address);
+
+	case MemoryError::Misaligned:
+		return Trap::StoreMisaligned(address);
+	}
+
+	return std::nullopt;
 }

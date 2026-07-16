@@ -38,7 +38,13 @@ public:
 	CSR csrs;
 	Privilage_mode mode;
 
+	std::optional<Trap> load8(uint32_t address, uint8_t& value);
+	std::optional<Trap> load16(uint32_t address, uint16_t& value);
+	std::optional<Trap> load32(uint32_t address, uint32_t& value);
 
+	std::optional<Trap> store8(uint32_t address, uint8_t value);
+	std::optional<Trap> store16(uint32_t address, uint16_t value);
+	std::optional<Trap> store32(uint32_t address, uint32_t value);
 
 private:
 

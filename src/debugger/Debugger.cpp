@@ -21,7 +21,7 @@ void Debugger::dump_mem(CPU& cpu, uint32_t address, uint32_t length) {
 			std::cout << "\n" << std::hex << address + i << ": ";
 		}
 
-		std::cout << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(cpu.memory.read8(address + i)) << ' ';
+		std::cout << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(cpu.memory.debug_read8(address + i)) << ' ';
 	} 
 
 }

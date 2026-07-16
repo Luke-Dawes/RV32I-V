@@ -2,10 +2,12 @@
 #include <cstdint>
 #include <unordered_map>
 #include <string>
-#include "../CPU/Trap.h"
+//#include "../CPU/Trap.h"
+#include <optional>
 //#include "CPU.h"
 
 class CPU;
+struct Trap;
 
 enum MemoryError
 {
@@ -26,9 +28,11 @@ public:
     MemoryError write16(uint32_t addr, uint16_t val);
     MemoryError write32(uint32_t addr, uint32_t val);
 
-    MemoryError read8(uint32_t addr, uint32_t& value);
-    MemoryError read16(uint32_t addr, uint32_t& value);
+    MemoryError read8(uint32_t addr, uint8_t& value);
+    MemoryError read16(uint32_t addr, uint16_t& value);
     MemoryError read32(uint32_t addr, uint32_t& value);
+
+    uint8_t debug_read8(uint32_t addr);
 
     Memory() {
         RAM = new uint8_t[1024 * 1024](); //1MB

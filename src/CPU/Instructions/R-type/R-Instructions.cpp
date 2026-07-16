@@ -94,12 +94,12 @@ std::optional<Trap> div(CPU& cpu, const Decoded_instruction& ins) {
 		
 		if (cpu.registers[ins.rs2] == 0) {
 			cpu.registers[ins.rd] = 0xFFFFFFFFu; 
-			return; #########################################################
+			return std::nullopt;
 		}
 
 		if ((int32_t)cpu.registers[ins.rs1] == INT32_MIN && (int32_t)cpu.registers[ins.rs2] == -1) {
 			cpu.registers[ins.rd] = static_cast<uint32_t>(INT32_MIN); 
-			return;
+			return std::nullopt;
 		}
 
 		cpu.registers[ins.rd] = static_cast<uint32_t>((int32_t)cpu.registers[ins.rs1] / (int32_t)cpu.registers[ins.rs2]);
@@ -111,7 +111,7 @@ std::optional<Trap> divu(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) {
 		if (cpu.registers[ins.rs2] == 0) {
 			cpu.registers[ins.rd] = 0xFFFFFFFFu; 
-			return; ##############################################################
+			return std::nullopt;
 		}
 
 		cpu.registers[ins.rd] = cpu.registers[ins.rs1] / cpu.registers[ins.rs2];
@@ -123,12 +123,12 @@ std::optional<Trap> rem(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) {
 		if (cpu.registers[ins.rs2] == 0) {
 			cpu.registers[ins.rd] = cpu.registers[ins.rs1]; 
-			return; #####################################################################
+			return std::nullopt;
 		}
 
 		if ((int32_t)cpu.registers[ins.rs1] == INT32_MIN && (int32_t)cpu.registers[ins.rs2] == -1) {
 			cpu.registers[ins.rd] = 0;
-			return;
+			return std::nullopt;
 		}
 
 
@@ -141,7 +141,7 @@ std::optional<Trap> remu(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) {
 		if (cpu.registers[ins.rs2] == 0) {
 			cpu.registers[ins.rd] = cpu.registers[ins.rs1];
-			return;
+			return std::nullopt;
 		}
 
 		cpu.registers[ins.rd] = cpu.registers[ins.rs1] % cpu.registers[ins.rs2];

@@ -6,7 +6,7 @@
 
 
 // ----- B type ----------
-std::optional<Trap> beq(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> beq(CPU& cpu, const Decoded_instruction& ins) {
 	if (cpu.registers[ins.rs1] == cpu.registers[ins.rs2]) {
 		cpu.PC += ins.imm;
 		cpu.branch_happended = true;
@@ -14,7 +14,7 @@ std::optional<Trap> beq(CPU& cpu, Decoded_instruction& ins) {
 	return std::nullopt;
 }
 
-std::optional<Trap> bne(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> bne(CPU& cpu, const Decoded_instruction& ins) {
 	if (cpu.registers[ins.rs1] != cpu.registers[ins.rs2]) {
 		cpu.PC += ins.imm;
 		cpu.branch_happended = true;
@@ -22,7 +22,7 @@ std::optional<Trap> bne(CPU& cpu, Decoded_instruction& ins) {
 	return std::nullopt;
 }
 
-std::optional<Trap> blt(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> blt(CPU& cpu, const Decoded_instruction& ins) {
 	if (static_cast<int32_t>(cpu.registers[ins.rs1]) < static_cast<int32_t>(cpu.registers[ins.rs2])) {
 		cpu.PC += ins.imm;
 		cpu.branch_happended = true;
@@ -30,7 +30,7 @@ std::optional<Trap> blt(CPU& cpu, Decoded_instruction& ins) {
 	return std::nullopt;
 }
 
-std::optional<Trap> bge(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> bge(CPU& cpu, const Decoded_instruction& ins) {
 	if (static_cast<int32_t>(cpu.registers[ins.rs1]) >= static_cast<int32_t>(cpu.registers[ins.rs2])) {
 		cpu.PC += ins.imm;
 		cpu.branch_happended = true;
@@ -38,7 +38,7 @@ std::optional<Trap> bge(CPU& cpu, Decoded_instruction& ins) {
 	return std::nullopt;
 }
 
-std::optional<Trap> bltu(CPU& cpu, Decoded_instruction& ins) { //zero extends
+std::optional<Trap> bltu(CPU& cpu, const Decoded_instruction& ins) { //zero extends
 	if (cpu.registers[ins.rs1] < cpu.registers[ins.rs2]) {
 		cpu.PC += ins.imm;
 		cpu.branch_happended = true;
@@ -46,7 +46,7 @@ std::optional<Trap> bltu(CPU& cpu, Decoded_instruction& ins) { //zero extends
 	return std::nullopt;
 }
 
-std::optional<Trap> bgeu(CPU& cpu, Decoded_instruction& ins) { //zero extends - imm is a int but the rest is uint
+std::optional<Trap> bgeu(CPU& cpu, const Decoded_instruction& ins) { //zero extends - imm is a int but the rest is uint
 	if (cpu.registers[ins.rs1] >= cpu.registers[ins.rs2]) {
 		cpu.PC += ins.imm;
 		cpu.branch_happended = true;
@@ -55,7 +55,7 @@ std::optional<Trap> bgeu(CPU& cpu, Decoded_instruction& ins) { //zero extends - 
 }
 
 // ----- J type ----------
-std::optional<Trap> jal(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> jal(CPU& cpu, const Decoded_instruction& ins) {
 	if (ins.rd != 0) {
 		cpu.registers[ins.rd] = cpu.PC + 4;
 	}
@@ -68,12 +68,12 @@ std::optional<Trap> jal(CPU& cpu, Decoded_instruction& ins) {
 }
 
 // ----- U type ----------
-std::optional<Trap> lui(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> lui(CPU& cpu, const Decoded_instruction& ins) {
 	cpu.registers[ins.rd] = ins.imm;
 	return std::nullopt;
 }
 
-std::optional<Trap> auipc(CPU& cpu, Decoded_instruction& ins) {
+std::optional<Trap> auipc(CPU& cpu, const Decoded_instruction& ins) {
 	cpu.registers[ins.rd] = cpu.PC + ins.imm;
 	return std::nullopt;
 }
