@@ -19,171 +19,153 @@ https://gist.github.com/x0nu11byt3/bcb35c3de461e5fb66173071a2379779 elf loader
 # plan - with C and C++
 make the kernal compile into an elf file, and then have my emulator run that elf file.
 
-## Project 1 - RISC-V Emulator (C++)
-### CPU
-✅ Implement RV32I base ISA
+==================================================
+Project 1 - RISC-V Emulator (C++)
+==================================================
 
-✅ Build assembler
+### Milestone 1 - CPU
+✅ RV32I base ISA
+✅ M extension (multiply/divide)
+✅ Instruction testing
 
-✅ Encode assembly into machine code
+### Milestone 2 - Program Loading
+✅ ELF loader
+✅ Load program segments
+✅ Initialise PC
+✅ Initialise SP
+✅ Symbol loading
 
-⏳ Finish testing M extension (multiply/divide)
-
-### Program Loading
-✅ Implement ELF loader
-
-✅ Load program segments into RAM
-
-✅ Initialise program counter (PC)
-
-✅ Initialise stack pointer (SP)
-
-✅ Support symbols for debugging
-
-### Debugger
+### Milestone 3 - Debugger
 ✅ Single step
-
 ✅ Continue
-
 ✅ Breakpoints
-
 ✅ Register viewer
-
 ✅ Memory viewer
-
-### Disassembler
 ⏳ Symbol lookup
 
-### privileged architecture - machine mode
-✅ Implement CSR registers
+### Milestone 4 - Privileged Architecture (M-mode)
+✅ CSR registers
+✅ CSR instructions
+⏳ mstatus handling
+⏳ mtvec
+⏳ mepc
+⏳ mcause
+⏳ mtval
+⏳ mie/mip
 
-✅ CSR instructions 
+### Milestone 5 - Traps
+✅ Trap entry
+✅ Save MEPC
+✅ Save MCAUSE
+✅ Save MTVAL
+✅ Update MSTATUS
+✅ Jump to MTVEC
 
-Implement Trap handling
+### Exceptions:
+✅ Illegal instruction
+✅ ECALL
+✅ EBREAK
+✅ Load/store faults
+✅ Misaligned access
 
-Implement exceptions
+⏳ MRET
 
-ECALL / EBREAK 
+### Milestone 6 - Hardware
+ Memory mapped devices
+ UART console output
+ Timer device
+ Timer interrupts
 
-MRET
-
-Implement interrupts
-
-### supervisor mode 
-s-mode CSR instructions
-
-SRET
-
-user mode? 
-
-### Memory System
-Physical RAM
-
-Memory-mapped devices
-
-### Sv39 virtual memory
-Address translation
-
-Page table walk
-
-Sv39
-
-Page faults
-
-TLB (optional)
-
-Hardware Devices
-UART (console output)
-
-Timer interrupt
-
-(Optional) Disk device
-
-(Optional) Simple GPU/framebuffer
-
-### Performance
-Cache simulator
-
-Instruction counter
-
-Cycle counter
-
-Cache statistics
-
-Branch statistics
-
-Performance report
+### Milestone 7 - Kernel Ready Emulator
+✅ Load kernel ELF
+✅ Execute boot code
+ Kernel prints to UART
 
 
-## Project 2 - Mini Kernel (C)
-### Boot
-✅ Boot assembly (boot.S)
+==================================================
+Project 2 - Mini Kernel (C + Assembly)
+==================================================
 
-✅ Initialise stack
+### Milestone 8 - Boot
+✅ boot.S
+✅ Stack setup
+kernel_main()
 
-Jump to kernel_main()
+### Milestone 9 - Console
+ UART driver
+ putchar()
+ printf()
+ Logging
 
-### Console
-UART driver
+### Milestone 10 - Kernel Traps
+ trap.S
+ Save registers
+ Restore registers
+ Trap handler in C
+ Exception handling
+ Interrupt handling
+ MRET return
 
-printf()
+### Milestone 11 - Memory Management
+ Memory map
+ Physical page allocator
+ Free pages
+ kmalloc()
+ kfree()
 
-Simple logging
+### Milestone 12 - Virtual Memory
+ Sv39 page tables
+ Address translation
+ Map kernel memory
+ Enable paging
+ Page faults
 
-Trap Handling
+### Milestone 13 - Processes
+ PCB
+ Create process
+ Destroy process
+ Process states
 
-Trap handler
+### Milestone 14 - Scheduler
+ Timer scheduling
+ Round-robin scheduler
+ Context switching
 
-Exception handling
+### Milestone 15 - System Calls
+ syscall handler
+ write()
+ read()
+ exit()
+ yield()
+ sleep()
+ Memory allocation
 
-Interrupt handling
 
-Return from trap
+==================================================
+Project 3 - User Mode
+==================================================
 
-### Memory Management
-Physical page allocator
+### Milestone 16 - Supervisor Mode
+ S-mode privilege
+ S-mode CSRs
+ SRET
+ Trap delegation
 
-Kernel heap (kmalloc)
+### Milestone 17 - User Programs
+ User ELF loading
+ User page tables
+ User/kernel separation
+ User stack
+ Basic libc
 
-Free memory
 
-Memory map
+==================================================
+Optional
+==================================================
 
-Virtual Memory
-
-Create page tables
-
-Map kernel memory
-
-Enable paging
-
-User address spaces
-
-### Processes
-Process Control Block (PCB)
-
-Create process
-
-Destroy process
-
-Process states
-
-### Scheduler
-Timer-based scheduling
-
-Round-robin scheduler
-
-Context switching
-
-### System Calls
-
-write
-read
-
-exit
-
-yield
-
-sleep
-
-Memory allocation
+ Disk device
+ Filesystem
+ GPU/framebuffer
+ Networking
+ Cache simulator
+ Performance statistics
